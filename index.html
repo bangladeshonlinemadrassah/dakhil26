@@ -1186,7 +1186,6 @@
       </div>
     </div>
   </div>
-
   <!-- মেইন ইনডেক্স পৃষ্ঠা (প্রথমে লুকানো) -->
   <div id="main-page" style="display: none;">
     <header>
@@ -1300,7 +1299,6 @@
       © 2025 Dakhil-26 "Final Stage Preparation Course" (BOM). All rights reserved.
     </footer>
   </div>
-
   <!-- সাবজেক্ট পৃষ্ঠা (প্রথমে লুকানো) -->
   <div id="subject-page" style="display: none;">
     <header>
@@ -1339,7 +1337,6 @@
       © 2025 Dakhil-26 "Final Stage Preparation Course" (BOM). All rights reserved.
     </footer>
   </div>
-
   <!-- ওয়ার্নিং মোডাল -->
   <div id="warning-modal" class="warning-modal">
     <div class="modal-content">
@@ -1355,9 +1352,7 @@
       </div>
     </div>
   </div>
-
   <div id="notification" class="notification"></div>
-
   <script>
     // =========================
     // JavaScript কোড - Google Sheets সংযোগ সহ
@@ -1707,7 +1702,9 @@
     function sortByTime(rows, order = 'desc') {
       if (!rows) return [];
       return rows.filter(r => r).slice().sort((a, b) => {
-        return order === 'asc' ? a.serial - b.serial : b.serial - a.serial;
+        const timeA = new Date(a.timestamp).getTime();
+        const timeB = new Date(b.timestamp).getTime();
+        return order === 'asc' ? timeA - timeB : timeB - timeA;
       });
     }
 
@@ -1738,7 +1735,7 @@
       grid.innerHTML = '<div class="card"><div class="subject bangla-font">লোড হচ্ছে... <span class="loading"></span></div></div>';
 
       let rows = allClasses.filter(r => r && String(r.subject).trim() === subject);
-      rows = sortByTime(rows, 'desc');
+      rows = sortByTime(rows, 'desc'); // Default to newest first
       renderCards(rows, grid);
 
       searchInput.addEventListener('input', () => {

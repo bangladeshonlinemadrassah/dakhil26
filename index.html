@@ -1828,6 +1828,35 @@
         });
       }, 100);
     });
+
+    // অতিরিক্ত 
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        const url = link.href;
+
+        // ইউটিউব লিংক
+        if (url.includes("youtube.com") || url.includes("youtu.be")) {
+          e.preventDefault();
+          window.location.href = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;package=com.google.android.youtube;scheme=https;end";
+        }
+
+        // ফেসবুক লিংক
+        else if (url.includes("facebook.com")) {
+          e.preventDefault();
+          window.location.href = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;package=com.facebook.katana;scheme=https;end";
+        }
+
+        // অন্যান্য লিংক → গুগল ক্রোমে খোলা
+        else {
+          e.preventDefault();
+          window.location.href = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;package=com.android.chrome;scheme=https;end";
+        }
+      });
+    });
+  });
+
   </script>
 </body>
 </html>

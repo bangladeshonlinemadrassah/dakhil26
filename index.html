@@ -953,6 +953,7 @@
       right: 0;
       height: 4px;
       background: var(--gradient-primary);
+      z-index: 1;
     }
 
     .welcome-message {
@@ -1175,7 +1176,7 @@
           <input type="password" id="password" placeholder="এখানে কোডটি লিখুন" class="bangla-font">
         </div>
         <button class="login-btn bangla-font" onclick="checkPassword()">লগইন করুন</button>
-        <div id="error-message" class="error-message bangla-font">সিকিউরিটি কোডটি ভুল হয়েছে। আবার চেষ্টা করুন।</div>
+        <div id="error-message" class="error-message bangla-font">সিকিউরিটি 코ডটি ভুল হয়েছে। আবার চেষ্টা করুন।</div>
       </div>
       <div class="support-info">
         <p class="bangla-font">এক্সেস পাসওয়ার্ড পেতে BOM এর এডমিনের সাথে যোগাযোগ করুন</p>
@@ -1205,7 +1206,7 @@
       <!-- হিরো সেকশন -->
       <div class="hero fade-in">
         <h1 class="bangla-font">Dakhil-26 "Final Stage Preparation Course"</h1>
-        <p class="bangla-font">শিক্ষার যাত্রায় এক নতুন দিগন্ত। বাংলাদেশ অনলাইন মাদ্রসাা (BOM) এর প্রাইভেট ব্যাচের দাখিল-২৬ শিক্ষার্থীদের জন্য প্রিমিয়াম লার্নিং এক্সপেরিয়েন্স</p>
+        <p class="bangla-font">শিক্ষার যাত্রায় এক নতুন দিগন্ত। বাংলাদেশ অনলাইন মাদ্রাসা (BOM) এর প্রাইভেট ব্যাচের দাখিল-২৬ শিক্ষার্থীদের জন্য প্রিমিয়াম লার্নিং এক্সপেরিয়েন্স</p>
       </div>
       <!-- স্ট্যাটস সেকশন -->
       <div class="stats">
@@ -1257,7 +1258,7 @@
         <a class="pill subject-link" href="#" data-name="হাদিস শরীফ"><span><i class="fas fa-book"></i> <span class="bangla-font">হাদিস শরীফ</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="আরবি প্রথম পত্র"><span><i class="fas fa-language"></i> <span class="bangla-font">আরবি প্রথম পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="আরবি দ্বিতীয় পত্র"><span><i class="fas fa-language"></i> <span class="bangla-font">আরবি দ্বিতীয় পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
-        <a class="pill subject-link" href="#" data-name="আকাইদ ও ফিকহ"><span><i class="fas fa-balance-scale"></i> <span class="bangla-font">আকাইদ ও ফিকহ</span></span><span class="go bangla-font">খুলুন</span></a>
+        <a class="pill subject-link" href="#" data-name="আকাইদ ও फিকহ"><span><i class="fas fa-balance-scale"></i> <span class="bangla-font">আকাইদ ও ফিকহ</span></span><span class="go bangla-font">खुलুন</span></a>
         <a class="pill subject-link" href="#" data-name="বাংলা প্রথম পত্র"><span><i class="fas fa-font"></i> <span class="bangla-font">বাংলা প্রথম পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="বাংলা দ্বিতীয় পত্র"><span><i class="fas fa-font"></i> <span class="bangla-font">বাংলা দ্বিতীয় পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="ইংরেজি প্রথম পত্র"><span><i class="fas fa-font"></i> <span class="bangla-font">ইংরেজি প্রথম পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
@@ -1373,7 +1374,7 @@
 
     // সাবজেক্টের তালিকা (Dakhil-26 এর জন্য)
     const availableSubjects = [
-      "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
+      "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীफ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
       "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
       "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
       "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
@@ -1585,30 +1586,50 @@
       }
     }
 
-    // ডেটা নরমালাইজ করা
-    function normalizeRow(row, index) {
+    // ডেটা নরমালাইজ করা - সাবজেক্ট অনুযায়ী আলাদা সিরিয়াল নাম্বারিং
+    function normalizeRows(rows) {
       try {
-        const timestamp = row.timestamp || '';
-        const subjectFromSheet = row.subject || 'Unknown Subject';
-        const link = row.link || '#';
-        const title = row.title || 'ক্লাস ভিডিও';
-        const date = getDateFromTimestamp(timestamp);
-        const time = getTimeFromTimestamp(timestamp);
-        const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
+        // প্রথমে তারিখ অনুযায়ী সাজানো (নতুন থেকে পুরানো)
+        const sortedRows = rows.slice().sort((a, b) => {
+          const timeA = new Date(a.timestamp || 0).getTime();
+          const timeB = new Date(b.timestamp || 0).getTime();
+          return timeB - timeA; // নতুন থেকে পুরানো
+        });
 
-        return {
-          subject: matchedSubject,
-          originalSubject: subjectFromSheet,
-          link: link,
-          title: title,
-          date: date,
-          time: time,
-          serial: index + 1,
-          timestamp: timestamp
-        };
+        // প্রতিটি সাবজেক্টের জন্য আলাদা কাউন্টার
+        const subjectCounters = {};
+        
+        return sortedRows.map(row => {
+          const timestamp = row.timestamp || '';
+          const subjectFromSheet = row.subject || 'Unknown Subject';
+          const link = row.link || '#';
+          const title = row.title || 'ক্লাস ভিডিও';
+          const date = getDateFromTimestamp(timestamp);
+          const time = getTimeFromTimestamp(timestamp);
+          const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
+
+          // সাবজেক্টের জন্য কাউন্টার ইনিশিয়ালাইজ করা
+          if (!subjectCounters[matchedSubject]) {
+            subjectCounters[matchedSubject] = 0;
+          }
+          
+          // সাবজেক্ট কাউন্টার বাড়ানো
+          subjectCounters[matchedSubject]++;
+          
+          return {
+            subject: matchedSubject,
+            originalSubject: subjectFromSheet,
+            link: link,
+            title: title,
+            date: date,
+            time: time,
+            serial: subjectCounters[matchedSubject], // সাবজেক্ট-ভিত্তিক সিরিয়াল
+            timestamp: timestamp
+          };
+        });
       } catch (error) {
-        console.error("Row normalization error:", error, row);
-        return null;
+        console.error("Rows normalization error:", error);
+        return [];
       }
     }
 
@@ -1698,7 +1719,7 @@
       container.innerHTML = tableHTML;
     }
 
-    // সময় অনুযায়ী সাজানো
+    // সময় অনুযায়ী সাজানো (নতুন থেকে পুরানো)
     function sortByTime(rows, order = 'desc') {
       if (!rows) return [];
       return rows.filter(r => r).slice().sort((a, b) => {
@@ -1793,7 +1814,7 @@
     async function loadInitialData() {
       try {
         const data = await fetchData();
-        allClasses = data.map((row, index) => normalizeRow(row, index)).filter(r => r);
+        allClasses = normalizeRows(data);
         console.log("Processed classes:", allClasses);
         renderTodayClassesSummary(allClasses);
         setupEventListeners();
@@ -1828,7 +1849,6 @@
         });
       }, 100);
     });
-
   </script>
 </body>
 </html>

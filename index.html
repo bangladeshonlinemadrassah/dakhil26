@@ -1277,8 +1277,6 @@
         <a class="pill subject-link" href="#" data-name="পৌরনীতি ও নাগরিকতা"><span><i class="fas fa-landmark"></i> <span class="bangla-font">পৌরনীতি ও নাগরিকতা</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="মিশন"><span><i class="fas fa-bullseye"></i> <span class="bangla-font">মিশন</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="ইক্সাম"><span><i class="fas fa-file-alt"></i> <span class="bangla-font">ইক্সাম</span></span><span class="go bangla-font">খুলুন</span></a>
-        <a class="pill subject-link" href="#" data-name="ক্লাসের লেকচার শীট"><span><i class="fas fa-file-pdf"></i> <span class="bangla-font">ক্লাসের লেকচার শীট</span></span><span class="go bangla-font">খুলুন</span></a>
-        <a class="pill subject-link" href="#" data-name="পরীক্ষার রেজাল্ট শীট"><span><i class="fas fa-chart-bar"></i> <span class="bangla-font">পরীক্ষার রেজাল্ট শীট</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="অন্যান্য"><span><i class="fas fa-ellipsis-h"></i> <span class="bangla-font">অন্যান্য</span></span><span class="go bangla-font">খুলুন</span></a>
       </div>
     </main>
@@ -1375,15 +1373,15 @@
     let allClasses = [];
 
     // সাবজেক্টের তালিকা (Dakhil-26 এর জন্য)
-const availableSubjects = [
-  "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
-  "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
-  "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
-  "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
-  "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
-  "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
-  "ইক্সাম", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"
-   ];
+    const availableSubjects = [
+      "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীफ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
+      "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
+      "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
+      "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
+      "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
+      "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
+      "ইক্সাম", "অন্যান্য"
+    ];
 
     // localStorage keys
     const LOGIN_EXPIRY_KEY = 'dakhil26_login_expiry';
@@ -1647,8 +1645,9 @@ const availableSubjects = [
         console.error("Exam expiry check error:", error, timestamp);
         return false;
       }
+    }
 
-       // কার্ড রেন্ডার করা
+    // কার্ড রেন্ডার করা
     function renderCards(rows, root) {
       if (!rows || rows.length === 0) {
         root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
@@ -1689,7 +1688,37 @@ const availableSubjects = [
       });
     }
 
-    
+    // আজকের ক্লাস ফিল্টার করা
+    function filterTodayClasses(classes) {
+      const today = getTodayDate();
+      return classes.filter(cls => cls && cls.date === today);
+    }
+
+    // আজকের ক্লাসের সারাংশ দেখানো
+    function renderTodayClassesSummary(classes) {
+      const today = getTodayDate();
+      const todayClasses = filterTodayClasses(classes);
+      const container = $('#today-classes-body');
+
+      if (!todayClasses || todayClasses.length === 0) {
+        container.innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;">আজকের জন্য কোন ক্লাস পাওয়া যায়নি</td></tr>`;
+        return;
+      }
+
+      let tableHTML = '';
+      todayClasses.forEach(cls => {
+        if (!cls) return;
+        tableHTML += `
+          <tr>
+            <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
+            <td class="class-info bangla-font">${cls.title}</td>
+            <td class="bangla-font">${cls.time}</td>
+          </tr>
+        `;
+      });
+      container.innerHTML = tableHTML;
+    }
+
     // সময় অনুযায়ী সাজানো (নতুন থেকে পুরানো)
     function sortByTime(rows, order = 'desc') {
       if (!rows) return [];

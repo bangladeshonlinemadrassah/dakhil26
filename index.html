@@ -1258,7 +1258,7 @@
         <a class="pill subject-link" href="#" data-name="হাদিস শরীফ"><span><i class="fas fa-book"></i> <span class="bangla-font">হাদিস শরীফ</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="আরবি প্রথম পত্র"><span><i class="fas fa-language"></i> <span class="bangla-font">আরবি প্রথম পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="আরবি দ্বিতীয় পত্র"><span><i class="fas fa-language"></i> <span class="bangla-font">আরবি দ্বিতীয় পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
-        <a class="pill subject-link" href="#" data-name="আকাইদ ও फিকহ"><span><i class="fas fa-balance-scale"></i> <span class="bangla-font">আকাইদ ও ফিকহ</span></span><span class="go bangla-font">खुलুন</span></a>
+        <a class="pill subject-link" href="#" data-name="আকাইদ ও ফিকহ"><span><i class="fas fa-balance-scale"></i> <span class="bangla-font">আকাইদ ও ফিকহ</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="বাংলা প্রথম পত্র"><span><i class="fas fa-font"></i> <span class="bangla-font">বাংলা প্রথম পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="বাংলা দ্বিতীয় পত্র"><span><i class="fas fa-font"></i> <span class="bangla-font">বাংলা দ্বিতীয় পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="ইংরেজি প্রথম পত্র"><span><i class="fas fa-font"></i> <span class="bangla-font">ইংরেজি প্রথম পত্র</span></span><span class="go bangla-font">খুলুন</span></a>
@@ -1673,6 +1673,9 @@ const availableSubjects = [
           } else {
             buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
           }
+          else if (r.subject === "ক্লাসের লেকচার শীট" "পরিক্ষার রেজাল্ট শীট" "অন্যান্য") {
+          buttonText = "দেখুন";
+    
         } else {
           buttonText = "ক্লাস দেখুন";
         }

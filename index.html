@@ -1647,52 +1647,48 @@ const availableSubjects = [
         console.error("Exam expiry check error:", error, timestamp);
         return false;
       }
-    }
 
-    // কার্ড রেন্ডার করা
-function renderCards(rows, root) {
-  if (!rows || rows.length === 0) {
-    root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
-    return;
-  }
-
-  root.innerHTML = '';
-  rows.forEach(r => {
-    if (!r) return;
-
-    let buttonText;
-    let isDisabled = false;
-    let link = r.link;
-    
-    // নতুন সাবজেক্টগুলোর জন্য "দেখুন" টেক্সট সেট করা
-    if (r.subject === "ক্লাসের লেকচার শীট" || r.subject === "পরীক্ষার রিজাল্ট শীট" || r.subject === "অন্যান্য") {
-      buttonText = "দেখুন";
-    } else if (r.subject === "মিশন") {
-      buttonText = "মিশন সম্পন্ন করুন";
-    } else if (r.subject === "ইক্সাম") {
-      if (isExamLinkExpired(r.timestamp)) {
-        buttonText = "পরীক্ষায় অংশগ্রহণ করার সময় শেষ হয়ে গেছে";
-        isDisabled = true;
-        link = "#";
-      } else {
-        buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
+       // কার্ড রেন্ডার করা
+    function renderCards(rows, root) {
+      if (!rows || rows.length === 0) {
+        root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
+        return;
       }
-    } else {
-      buttonText = "ক্লাস দেখুন";
+
+      root.innerHTML = '';
+      rows.forEach(r => {
+        if (!r) return;
+
+        let buttonText;
+        let isDisabled = false;
+        let link = r.link;
+        if (r.subject === "মিশন") {
+          buttonText = "মিশন সম্পন্ন করুন";
+        } else if (r.subject === "ইক্সাম") {
+          if (isExamLinkExpired(r.timestamp)) {
+            buttonText = "পরীক্ষায় অংশগ্রহণ করার সময় শেষ হয়ে গেছে";
+            isDisabled = true;
+            link = "#";
+          } else {
+            buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
+          }
+        } else {
+          buttonText = "ক্লাস দেখুন";
+        }
+
+        const card = document.createElement('div');
+        card.className = 'card fade-in';
+        card.innerHTML = `
+          <span class="card-badge">#${r.serial}</span>
+          <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
+          <div class="video-title bangla-font">${r.title}</div>
+          <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${formatDateToBangla(r.date)}</span></div>
+          <a class="btn${isDisabled ? ' disabled' : ''}" ${isDisabled ? '' : 'target="_blank" rel="noopener"'} href="${link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
+        `;
+        root.appendChild(card);
+      });
     }
 
-    const card = document.createElement('div');
-    card.className = 'card fade-in';
-    card.innerHTML = `
-      <span class="card-badge">#${r.serial}</span>
-      <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
-      <div class="video-title bangla-font">${r.title}</div>
-      <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${formatDateToBangla(r.date)}</span></div>
-      <a class="btn${isDisabled ? ' disabled' : ''}" ${isDisabled ? '' : 'target="_blank" rel="noopener"'} href="${link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
-    `;
-    root.appendChild(card);
-  });
-    }
     
     // সময় অনুযায়ী সাজানো (নতুন থেকে পুরানো)
     function sortByTime(rows, order = 'desc') {

@@ -7,9 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* =========================
-    CSS VARIABLES
-    ========================= */
+    /* Previous CSS styles remain unchanged */
     :root {
       --primary: #2563eb;
       --primary-dark: #1e40af;
@@ -35,9 +33,6 @@
       --transition: all 0.3s ease;
     }
 
-    /* =========================
-    BASE STYLES
-    ========================= */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -68,18 +63,12 @@
       text-decoration: none;
     }
 
-    /* =========================
-    LAYOUT & CONTAINER
-    ========================= */
     .container {
       max-width: 1280px;
       margin: 0 auto;
       padding: 20px;
     }
 
-    /* =========================
-    HEADER & NAVIGATION
-    ========================= */
     header {
       position: sticky;
       top: 0;
@@ -160,9 +149,6 @@
       font-size: 1rem;
     }
 
-    /* =========================
-    HERO SECTION
-    ========================= */
     .hero {
       text-align: center;
       padding: 60px 30px;
@@ -206,9 +192,6 @@
       line-height: 1.8;
     }
 
-    /* =========================
-    STATS SECTION
-    ========================= */
     .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -261,9 +244,6 @@
       font-weight: 500;
     }
 
-    /* =========================
-    TODAY'S CLASSES TABLE
-    ========================= */
     .today-classes-table {
       width: 100%;
       border-collapse: collapse;
@@ -312,9 +292,6 @@
       color: var(--text-muted);
     }
 
-    /* =========================
-    CARDS & GRID
-    ========================= */
     .grid {
       display: grid;
       gap: 25px;
@@ -420,9 +397,6 @@
       box-shadow: none;
     }
 
-    /* =========================
-    SUBJECT LIST
-    ========================= */
     .subj-list {
       display: grid;
       gap: 15px;
@@ -483,7 +457,6 @@
       transform: translateX(3px);
     }
 
-    /* -------------------- Owner + Designer block styles -------------------- */
     .owner-wrap {
       max-width: 980px;
       margin: 28px auto 12px;
@@ -591,9 +564,6 @@
       }
     }
 
-    /* =========================
-    CONTROLS & BACK BUTTON
-    ========================= */
     .controls {
       display: flex;
       gap: 15px;
@@ -621,9 +591,6 @@
       border-color: var(--primary);
     }
 
-    /* =========================
-    SECTION TITLE
-    ========================= */
     .section-title {
       display: flex;
       align-items: center;
@@ -653,9 +620,6 @@
       color: transparent;
     }
 
-    /* =========================
-    EMPTY STATE
-    ========================= */
     .empty-state {
       text-align: center;
       padding: 40px 20px;
@@ -671,9 +635,6 @@
       opacity: 0.5;
     }
 
-    /* =========================
-    LOADING ANIMATION
-    ========================= */
     .loading {
       display: inline-block;
       width: 20px;
@@ -688,9 +649,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* =========================
-    NOTIFICATION
-    ========================= */
     .notification {
       position: fixed;
       bottom: 30px;
@@ -729,9 +687,6 @@
       border-left: 4px solid var(--warning);
     }
 
-    /* =========================
-    VIDEO TITLE
-    ========================= */
     .card .video-title {
       font-size: 0.9rem;
       color: var(--text-muted);
@@ -743,9 +698,6 @@
       line-height: 1.5;
     }
 
-    /* =========================
-    ANIMATIONS
-    ========================= */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -755,9 +707,6 @@
       animation: fadeIn 0.6s ease forwards;
     }
 
-    /* =========================
-    RESPONSIVE DESIGN
-    ========================= */
     @media (max-width: 968px) {
       .grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -820,17 +769,11 @@
       }
     }
 
-    /* =========================
-    CUSTOM SCROLLBAR
-    ========================= */
     ::-webkit-scrollbar {
       width: 0px;
       display: none;
     }
 
-    /* =========================
-    SPECIAL EFFECTS
-    ========================= */
     .glow-effect {
       position: relative;
     }
@@ -857,9 +800,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* =========================
-    SUBJECT PAGE STYLES
-    ========================= */
     #subject-page .container {
       padding-top: 25px;
     }
@@ -873,9 +813,6 @@
       color: transparent;
     }
 
-    /* =========================
-    SEARCH AND FILTER STYLES
-    ========================= */
     .filter-bar {
       display: flex;
       gap: 12px;
@@ -901,9 +838,6 @@
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
 
-    /* =========================
-    CARD BADGES
-    ========================= */
     .card-badge {
       position: absolute;
       top: 12px;
@@ -917,9 +851,6 @@
       box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
     }
 
-    /* =========================
-    LOGIN PAGE STYLES
-    ========================= */
     #login-page {
       background: var(--darker);
       color: var(--text);
@@ -1066,9 +997,6 @@
       display: none;
     }
 
-    /* =========================
-    WARNING MODAL STYLES
-    ========================= */
     .warning-modal {
       position: fixed;
       top: 0;
@@ -1160,10 +1088,13 @@
         padding: 20px;
       }
     }
+
+    #refresh-data-btn {
+      margin-left: auto;
+    }
   </style>
 </head>
 <body>
-  <!-- লগইন পৃষ্ঠা (ডিফল্টভাবে দেখাবে) -->
   <div id="login-page">
     <div class="login-container">
       <div class="welcome-message">
@@ -1187,7 +1118,6 @@
       </div>
     </div>
   </div>
-  <!-- মেইন ইনডেক্স পৃষ্ঠা (প্রথমে লুকানো) -->
   <div id="main-page" style="display: none;">
     <header>
       <nav class="nav container">
@@ -1200,15 +1130,14 @@
           <i class="fas fa-search"></i>
           <input id="search-subjects" type="search" placeholder="সাবজেক্ট খুঁজুন...">
         </div>
+        <button class="btn" id="refresh-data-btn"><i class="fas fa-sync-alt"></i> <span class="bangla-font">ডেটা রিফ্রেশ করুন</span></button>
       </nav>
     </header>
     <main class="container">
-      <!-- হিরো সেকশন -->
       <div class="hero fade-in">
         <h1 class="bangla-font">Dakhil-26 "Final Stage Preparation Course"</h1>
         <p class="bangla-font">শিক্ষার যাত্রায় এক নতুন দিগন্ত। বাংলাদেশ অনলাইন মাদ্রাসা (BOM) এর প্রাইভেট ব্যাচের দাখিল-২৬ শিক্ষার্থীদের জন্য প্রিমিয়াম লার্নিং এক্সপেরিয়েন্স</p>
       </div>
-      <!-- স্ট্যাটস সেকশন -->
       <div class="stats">
         <div class="stat-card fade-in">
           <div class="stat-number">21</div>
@@ -1227,7 +1156,6 @@
           <div class="stat-label bangla-font">মিশন</div>
         </div>
       </div>
-      <!-- আজকের ক্লাস সেকশন -->
       <div class="section-title">
         <h2 class="bangla-font">আজকের ক্লাস</h2>
       </div>
@@ -1249,7 +1177,6 @@
           </tbody>
         </table>
       </div>
-      <!-- সকল সাবজেক্ট সেকশন -->
       <div class="section-title">
         <h2 class="bangla-font">সব সাবজেক্ট</h2>
       </div>
@@ -1279,10 +1206,9 @@
         <a class="pill subject-link" href="#" data-name="ইক্সাম"><span><i class="fas fa-file-alt"></i> <span class="bangla-font">ইক্সাম</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="ক্লাসের লেকচার শীট"><span><i class="fas fa-file-pdf"></i> <span class="bangla-font">ক্লাসের লেকচার শীট</span></span><span class="go bangla-font">খুলুন</span></a>
         <a class="pill subject-link" href="#" data-name="পরীক্ষার রেজাল্ট শীট"><span><i class="fas fa-chart-bar"></i> <span class="bangla-font">পরীক্ষার রেজাল্ট শীট</span></span><span class="go bangla-font">খুলুন</span></a>
-         <a class="pill subject-link" href="#" data-name="অন্যান্য"><span><i class="fas fa-ellipsis-h"></i> <span class="bangla-font">অন্যান্য</span></span><span class="go bangla-font">খুলুন</span></a>
+        <a class="pill subject-link" href="#" data-name="অন্যান্য"><span><i class="fas fa-ellipsis-h"></i> <span class="bangla-font">অন্যান্য</span></span><span class="go bangla-font">খুলুন</span></a>
       </div>
     </main>
-    <!-- OWNER + DESIGNER block -->
     <div class="owner-wrap">
       <div class="owner-messages" aria-hidden="false">
         <span class="msg">crafted with care</span>
@@ -1297,12 +1223,10 @@
         <span class="designer-name">SAHIBUL MUSA SIUM</span>
       </div>
     </div>
-    <!-- final english footer message -->
     <footer class="site-footer">
       © 2025 Dakhil-26 "Final Stage Preparation Course" (BOM). All rights reserved.
     </footer>
   </div>
-  <!-- সাবজেক্ট পৃষ্ঠা (প্রথমে লুকানো) -->
   <div id="subject-page" style="display: none;">
     <header>
       <nav class="nav container">
@@ -1320,7 +1244,6 @@
       <h2 id="subject-title" class="bangla-font"><i class="fas fa-book"></i> সাবজেক্ট</h2>
       <div id="classGrid" class="grid"></div>
     </main>
-    <!-- OWNER + DESIGNER block -->
     <div class="owner-wrap">
       <div class="owner-messages" aria-hidden="false">
         <span class="msg">crafted with care</span>
@@ -1335,12 +1258,10 @@
         <span class="designer-name">SAHIBUL MUSA SIUM</span>
       </div>
     </div>
-    <!-- final english footer message -->
     <footer class="site-footer">
       © 2025 Dakhil-26 "Final Stage Preparation Course" (BOM). All rights reserved.
     </footer>
   </div>
-  <!-- ওয়ার্নিং মোডাল -->
   <div id="warning-modal" class="warning-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -1357,16 +1278,11 @@
   </div>
   <div id="notification" class="notification"></div>
   <script>
-    // =========================
-    // JavaScript কোড - Google Sheets সংযোগ সহ
-    // =========================
     const API_URL = "https://script.google.com/macros/s/AKfycbwZnb6Lr-_IN1FzgvhQ-em6NjaqVIWWpmEKHinchUbY4Bt8NhOssIx_dRJ4MiSFmfKJ4g/exec";
 
-    // DOM হেল্পার ফাংশন
     function $(sel, root = document) { return root.querySelector(sel); }
     function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
-    // পেজ স্টেট ম্যানেজমেন্ট
     let currentSubject = null;
     const loginPage = $('#login-page');
     const mainPage = $('#main-page');
@@ -1374,27 +1290,23 @@
     const warningModal = $('#warning-modal');
     let allClasses = [];
 
-    // সাবজেক্টের তালিকা (Dakhil-26 এর জন্য)
-const availableSubjects = [
-  "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
-  "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
-  "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
-  "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
-  "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
-  "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
-  "ইক্সাম", "ক্লাসের লেকচার শীট", "পরীক্ষার রিজাল্ট শীট", "অন্যান্য"
-  ];
+    const availableSubjects = [
+      "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
+      "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
+      "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
+      "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
+      "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
+      "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
+      "ইক্সাম", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"
+    ];
 
-    // localStorage keys
     const LOGIN_EXPIRY_KEY = 'dakhil26_login_expiry';
     const IS_LOGGED_IN_KEY = 'dakhil26_is_logged_in';
 
-    // পেজ উপরে স্ক্রল করার ফাংশন
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // লগইন expiry তারিখ সেট করা
     function setLoginExpiry() {
       const now = new Date();
       const oneMonthFromNow = new Date(now.setMonth(now.getMonth() + 1));
@@ -1402,7 +1314,6 @@ const availableSubjects = [
       localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
     }
 
-    // লগইন expiry চেক করা
     function checkLoginExpiry() {
       const expiryTime = localStorage.getItem(LOGIN_EXPIRY_KEY);
       const isLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY);
@@ -1415,7 +1326,6 @@ const availableSubjects = [
       return now < parseInt(expiryTime);
     }
 
-    // লগআউট করা
     function logout() {
       localStorage.removeItem(LOGIN_EXPIRY_KEY);
       localStorage.removeItem(IS_LOGGED_IN_KEY);
@@ -1424,17 +1334,14 @@ const availableSubjects = [
       subjectPage.style.display = 'none';
     }
 
-    // ওয়ার্নিং মোডাল দেখানোর ফাংশন
     function showWarningModal() {
       warningModal.classList.add('show');
     }
 
-    // ওয়ার্নিং মোডাল বন্ধ করার ফাংশন
     function closeWarningModal() {
       warningModal.classList.remove('show');
     }
 
-    // নোটিফিকেশন দেখানোর ফাংশন
     function showNotification(message, isError = false, isWarning = false) {
       const notification = $('#notification');
       notification.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'}"></i> ${message}`;
@@ -1446,7 +1353,6 @@ const availableSubjects = [
       }, 3000);
     }
 
-    // পাসওয়ার্ড চেক করার ফাংশন
     function checkPassword() {
       const password = document.getElementById('password').value;
       const errorElement = document.getElementById('error-message');
@@ -1466,14 +1372,12 @@ const availableSubjects = [
       }
     }
 
-    // Enter কী চাপলে check password
     document.getElementById('password').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         checkPassword();
       }
     });
 
-    // টাইমস্ট্যাম্প থেকে তারিখ বের করা
     function getDateFromTimestamp(timestamp) {
       if (!timestamp) return getTodayDate();
 
@@ -1494,7 +1398,6 @@ const availableSubjects = [
       }
     }
 
-    // টাইমস্ট্যাম্প থেকে সময় বের করা
     function getTimeFromTimestamp(timestamp) {
       if (!timestamp) return '3:37 PM';
 
@@ -1514,7 +1417,6 @@ const availableSubjects = [
       }
     }
 
-    // আজকের তারিখ ফরম্যাট করা
     function getTodayDate() {
       const today = new Date();
       const year = today.getFullYear();
@@ -1523,13 +1425,11 @@ const availableSubjects = [
       return `${year}-${month}-${day}`;
     }
 
-    // বাংলা মাসের নাম
     const banglaMonths = [
       'জানুয়ারী', 'ফেব্রুয়ারী', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
       'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
     ];
 
-    // তারিখ ফরম্যাট করা (বাংলা ফরম্যাটে)
     function formatDateToBangla(dateStr) {
       if (!dateStr) return '';
 
@@ -1545,7 +1445,6 @@ const availableSubjects = [
       }
     }
 
-    // সাবজেক্ট ম্যাচিং ফাংশন
     function findBestMatchingSubject(subjectFromSheet) {
       if (!subjectFromSheet) return null;
 
@@ -1558,7 +1457,6 @@ const availableSubjects = [
       return cleanSubject;
     }
 
-    // ডেটা ফেচ করা
     async function fetchData() {
       try {
         showNotification("ডেটা লোড হচ্ছে...", false);
@@ -1588,17 +1486,14 @@ const availableSubjects = [
       }
     }
 
-    // ডেটা নরমালাইজ করা - সাবজেক্ট অনুযায়ী আলাদা সিরিয়াল নাম্বারিং
     function normalizeRows(rows) {
       try {
-        // প্রথমে তারিখ অনুযায়ী সাজানো (নতুন থেকে পুরানো)
         const sortedRows = rows.slice().sort((a, b) => {
           const timeA = new Date(a.timestamp || 0).getTime();
           const timeB = new Date(b.timestamp || 0).getTime();
-          return timeB - timeA; // নতুন থেকে পুরানো
+          return timeB - timeA;
         });
 
-        // প্রতিটি সাবজেক্টের জন্য আলাদা কাউন্টার
         const subjectCounters = {};
         
         return sortedRows.map(row => {
@@ -1610,12 +1505,10 @@ const availableSubjects = [
           const time = getTimeFromTimestamp(timestamp);
           const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
 
-          // সাবজেক্টের জন্য কাউন্টার ইনিশিয়ালাইজ করা
           if (!subjectCounters[matchedSubject]) {
             subjectCounters[matchedSubject] = 0;
           }
           
-          // সাবজেক্ট কাউন্টার বাড়ানো
           subjectCounters[matchedSubject]++;
           
           return {
@@ -1625,7 +1518,7 @@ const availableSubjects = [
             title: title,
             date: date,
             time: time,
-            serial: subjectCounters[matchedSubject], // সাবজেক্ট-ভিত্তিক সিরিয়াল
+            serial: subjectCounters[matchedSubject],
             timestamp: timestamp
           };
         });
@@ -1635,13 +1528,12 @@ const availableSubjects = [
       }
     }
 
-    // Check if exam link is expired (10 hours = 36,000,000 milliseconds)
     function isExamLinkExpired(timestamp) {
       if (!timestamp) return false;
       try {
         const examTime = new Date(timestamp).getTime();
         const now = new Date().getTime();
-        const tenHoursInMs = 10 * 60 * 60 * 1000; // 10 hours in milliseconds
+        const tenHoursInMs = 10 * 60 * 60 * 1000;
         return (now - examTime) > tenHoursInMs;
       } catch (error) {
         console.error("Exam expiry check error:", error, timestamp);
@@ -1649,7 +1541,6 @@ const availableSubjects = [
       }
     }
 
-    // কার্ড রেন্ডার করা
     function renderCards(rows, root) {
       if (!rows || rows.length === 0) {
         root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
@@ -1660,10 +1551,14 @@ const availableSubjects = [
       rows.forEach(r => {
         if (!r) return;
 
+        const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
         let buttonText;
         let isDisabled = false;
         let link = r.link;
-        if (r.subject === "মিশন") {
+
+        if (specialFolders.includes(r.subject)) {
+          buttonText = "দেখুন";
+        } else if (r.subject === "মিশন") {
           buttonText = "মিশন সম্পন্ন করুন";
         } else if (r.subject === "ইক্সাম") {
           if (isExamLinkExpired(r.timestamp)) {
@@ -1690,13 +1585,11 @@ const availableSubjects = [
       });
     }
 
-    // আজকের ক্লাস ফিল্টার করা
     function filterTodayClasses(classes) {
       const today = getTodayDate();
       return classes.filter(cls => cls && cls.date === today);
     }
 
-    // আজকের ক্লাসের সারাংশ দেখানো
     function renderTodayClassesSummary(classes) {
       const today = getTodayDate();
       const todayClasses = filterTodayClasses(classes);
@@ -1721,7 +1614,6 @@ const availableSubjects = [
       container.innerHTML = tableHTML;
     }
 
-    // সময় অনুযায়ী সাজানো (নতুন থেকে পুরানো)
     function sortByTime(rows, order = 'desc') {
       if (!rows) return [];
       return rows.filter(r => r).slice().sort((a, b) => {
@@ -1731,7 +1623,6 @@ const availableSubjects = [
       });
     }
 
-    // সাবজেক্ট পৃষ্ঠা দেখানো
     function showSubjectPage(subject) {
       currentSubject = subject;
       $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
@@ -1741,7 +1632,6 @@ const availableSubjects = [
       loadSubjectData(subject);
     }
 
-    // মেইন পৃষ্ঠায় ফিরে যাওয়া
     function showMainPage() {
       subjectPage.style.display = 'none';
       mainPage.style.display = 'block';
@@ -1749,7 +1639,6 @@ const availableSubjects = [
       scrollToTop();
     }
 
-    // সাবজেক্ট ডেটা লোড করা
     function loadSubjectData(subject) {
       const grid = $('#classGrid');
       const searchInput = $('#search');
@@ -1758,7 +1647,7 @@ const availableSubjects = [
       grid.innerHTML = '<div class="card"><div class="subject bangla-font">লোড হচ্ছে... <span class="loading"></span></div></div>';
 
       let rows = allClasses.filter(r => r && String(r.subject).trim() === subject);
-      rows = sortByTime(rows, 'desc'); // Default to newest first
+      rows = sortByTime(rows, 'desc');
       renderCards(rows, grid);
 
       searchInput.addEventListener('input', () => {
@@ -1777,7 +1666,30 @@ const availableSubjects = [
       });
     }
 
-    // ইভেন্ট লিসেনার সেটআপ
+    function setupRefreshButton() {
+      const refreshButton = $('#refresh-data-btn');
+      if (refreshButton) {
+        refreshButton.addEventListener('click', async () => {
+          refreshButton.disabled = true;
+          refreshButton.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> <span class="bangla-font">রিফ্রেশ হচ্ছে...</span>';
+          try {
+            const data = await fetchData();
+            allClasses = normalizeRows(data);
+            renderTodayClassesSummary(allClasses);
+            if (currentSubject) {
+              loadSubjectData(currentSubject);
+            }
+            showNotification("ডেটা সফলভাবে রিফ্রেশ হয়েছে!", false);
+          } catch (error) {
+            showNotification("ডেটা রিফ্রেশ করতে সমস্যা হয়েছে", true);
+          } finally {
+            refreshButton.disabled = false;
+            refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> <span class="bangla-font">ডেটা রিফ্রেশ করুন</span>';
+          }
+        });
+      }
+    }
+
     function setupEventListeners() {
       $all('.subject-link').forEach(link => {
         link.addEventListener('click', (e) => {
@@ -1810,27 +1722,24 @@ const availableSubjects = [
       $('#exam-stats').addEventListener('click', () => {
         showSubjectPage('ইক্সাম');
       });
+
+      setupRefreshButton();
     }
 
-    // প্রাথমিক ডেটা লোড
     async function loadInitialData() {
       try {
         const data = await fetchData();
         allClasses = normalizeRows(data);
-        console.log("Processed classes:", allClasses);
         renderTodayClassesSummary(allClasses);
         setupEventListeners();
       } catch (error) {
-        console.error("Initial data loading error:", error);
+        console.error("Initial data load error:", error);
         showNotification("ডেটা লোড করতে সমস্যা হয়েছে", true);
       }
     }
 
-    // পেজ লোড হলে ইনিশিয়ালাইজেশন
     document.addEventListener('DOMContentLoaded', () => {
-      const isLoggedIn = checkLoginExpiry();
-      
-      if (isLoggedIn) {
+      if (checkLoginExpiry()) {
         loginPage.style.display = 'none';
         mainPage.style.display = 'block';
         loadInitialData();
@@ -1838,18 +1747,7 @@ const availableSubjects = [
         loginPage.style.display = 'flex';
         mainPage.style.display = 'none';
         subjectPage.style.display = 'none';
-        localStorage.removeItem(LOGIN_EXPIRY_KEY);
-        localStorage.removeItem(IS_LOGGED_IN_KEY);
       }
-
-      scrollToTop();
-
-      setTimeout(() => {
-        document.querySelectorAll('.fade-in').forEach(el => {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        });
-      }, 100);
     });
   </script>
 </body>

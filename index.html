@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Previous CSS styles remain unchanged */
     :root {
       --primary: #2563eb;
       --primary-dark: #1e40af;
@@ -1130,7 +1129,10 @@
           <i class="fas fa-search"></i>
           <input id="search-subjects" type="search" placeholder="সাবজেক্ট খুঁজুন...">
         </div>
-        <button class="btn" id="refresh-data-btn"><i class="fas fa-sync-alt"></i> <span class="bangla-font">ডেটা রিফ্রেশ করুন</span></button>
+        <div class="controls">
+          <button class="btn" id="refresh-data-btn"><i class="fas fa-sync-alt"></i> <span class="bangla-font">ডেটা রিফ্রেশ করুন</span></button>
+          <a class="btn" id="add-class-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfL0sFmx3IiTXCiFFraymOe65ITt6TqtTJVgjQln5dpAgk1oQ/viewform?usp=header" target="_blank" rel="noopener" style="display: none;"><i class="fas fa-plus-circle"></i> <span class="bangla-font">ক্লাস যুক্ত করুন</span></a>
+        </div>
       </nav>
     </header>
     <main class="container">
@@ -1302,16 +1304,18 @@
 
     const LOGIN_EXPIRY_KEY = 'dakhil26_login_expiry';
     const IS_LOGGED_IN_KEY = 'dakhil26_is_logged_in';
+    const USER_ROLE_KEY = 'dakhil26_user_role';
 
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function setLoginExpiry() {
+    function setLoginExpiry(role) {
       const now = new Date();
       const oneMonthFromNow = new Date(now.setMonth(now.getMonth() + 1));
       localStorage.setItem(LOGIN_EXPIRY_KEY, oneMonthFromNow.getTime());
       localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
+      localStorage.setItem(USER_ROLE_KEY, role);
     }
 
     function checkLoginExpiry() {
@@ -1326,9 +1330,14 @@
       return now < parseInt(expiryTime);
     }
 
+    function getUserRole() {
+      return localStorage.getItem(USER_ROLE_KEY) || 'user';
+    }
+
     function logout() {
       localStorage.removeItem(LOGIN_EXPIRY_KEY);
       localStorage.removeItem(IS_LOGGED_IN_KEY);
+      localStorage.removeItem(USER_ROLE_KEY);
       loginPage.style.display = 'flex';
       mainPage.style.display = 'none';
       subjectPage.style.display = 'none';
@@ -1354,14 +1363,22 @@
     }
 
     function checkPassword() {
-      const password = document.getElementById('password').value;
-      const errorElement = document.getElementById('error-message');
+      const password = $('#password').value;
+      const errorElement = $('#error-message');
       
       if (password === 'USERDAKHIL26') {
+        setLoginExpiry('user');
         loginPage.style.display = 'none';
         mainPage.style.display = 'block';
-        setLoginExpiry();
         showWarningModal();
+        loadInitialData();
+        scrollToTop();
+      } else if (password === 'OWNERDAKHIL26') {
+        setLoginExpiry('owner');
+        loginPage.style.display = 'none';
+        mainPage.style.display = 'block';
+        showWarningModal();
+        showAddClassButton();
         loadInitialData();
         scrollToTop();
       } else {
@@ -1372,7 +1389,14 @@
       }
     }
 
-    document.getElementById('password').addEventListener('keypress', function(e) {
+    function showAddClassButton() {
+      const addClassBtn = $('#add-class-btn');
+      if (addClassBtn && getUserRole() === 'owner') {
+        addClassBtn.style.display = 'inline-flex';
+      }
+    }
+
+    $('#password').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         checkPassword();
       }
@@ -1704,51 +1728,33 @@
         showMainPage();
       });
 
-      const searchInput = $('#search-subjects');
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          const q = searchInput.value.trim().toLowerCase();
-          $all('.pill').forEach(p => {
-            const name = p.dataset.name.toLowerCase();
-            p.style.display = name.includes(q) ? '' : 'none';
-          });
+      $('#search-subjects').addEventListener('input', () => {
+        const query = $('#search-subjects').value.toLowerCase();
+        $all('.subject-link').forEach(pill => {
+          const subject = pill.getAttribute('data-name').toLowerCase();
+          pill.style.display = subject.includes(query) ? '' : 'none';
         });
-      }
-
-      $('#mission-stats').addEventListener('click', () => {
-        showSubjectPage('মিশন');
       });
-
-      $('#exam-stats').addEventListener('click', () => {
-        showSubjectPage('ইক্সাম');
-      });
-
-      setupRefreshButton();
     }
 
     async function loadInitialData() {
-      try {
-        const data = await fetchData();
-        allClasses = normalizeRows(data);
-        renderTodayClassesSummary(allClasses);
-        setupEventListeners();
-      } catch (error) {
-        console.error("Initial data load error:", error);
-        showNotification("ডেটা লোড করতে সমস্যা হয়েছে", true);
-      }
+      const data = await fetchData();
+      allClasses = normalizeRows(data);
+      renderTodayClassesSummary(allClasses);
+      setupEventListeners();
+      setupRefreshButton();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (checkLoginExpiry()) {
-        loginPage.style.display = 'none';
-        mainPage.style.display = 'block';
-        loadInitialData();
-      } else {
-        loginPage.style.display = 'flex';
-        mainPage.style.display = 'none';
-        subjectPage.style.display = 'none';
+    if (checkLoginExpiry()) {
+      loginPage.style.display = 'none';
+      mainPage.style.display = 'block';
+      if (getUserRole() === 'owner') {
+        showAddClassButton();
       }
-    });
+      loadInitialData();
+    } else {
+      logout();
+    }
   </script>
 </body>
 </html>

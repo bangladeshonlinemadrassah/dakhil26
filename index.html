@@ -136,16 +136,16 @@
       font-size: 0.95rem;
     }
 
-    .searchbar input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-    }
-
     .searchbar i {
       position: absolute;
       left: 18px;
       color: var(--text-muted);
       font-size: 1rem;
+    }
+
+    .searchbar input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
 
     .hero {
@@ -325,6 +325,12 @@
       transform: translateY(-5px);
       border-color: var(--primary);
       box-shadow: var(--shadow-lg);
+    }
+
+    .card.highlight {
+      background: rgba(37, 99, 235, 0.1);
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
     }
 
     .subject {
@@ -1091,6 +1097,51 @@
     #refresh-data-btn {
       margin-left: auto;
     }
+
+    .sorted-classes-table th, .sorted-classes-table td {
+      text-align: left;
+    }
+
+    .sorted-classes-table th:nth-child(3), .sorted-classes-table td:nth-child(3) {
+      width: 80px;
+    }
+
+    .sorted-classes-table th:nth-child(4), .sorted-classes-table td:nth-child(4) {
+      width: 120px;
+    }
+
+    #sort-classes {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: var(--glass);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 30px 8px 12px;
+      font-size: 0.85rem;
+      color: var(--text);
+      position: relative;
+      min-width: 150px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 14px;
+      transition: var(--transition);
+    }
+
+    #sort-classes:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .exam-expiry-notice {
+      color: var(--warning);
+      font-size: 0.8rem;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
@@ -1160,6 +1211,12 @@
       </div>
       <div class="section-title">
         <h2 class="bangla-font">আজকের ক্লাস</h2>
+        <select id="sort-classes" class="bangla-font">
+          <option value="today" selected>আজকের ক্লাস</option>
+          <option value="week">সপ্তাহের ক্লাস</option>
+          <option value="month">মাসের ক্লাস</option>
+          <option value="all">সকল ক্লাস</option>
+        </select>
       </div>
       <div id="today-classes">
         <table class="today-classes-table">
@@ -1167,7 +1224,7 @@
             <tr>
               <th class="bangla-font">সাবজেক্ট</th>
               <th class="bangla-font">ক্লাসের তথ্য</th>
-              <th class="bangla-font">সময়</th>
+              <th class="bangla-font">সময়/তারিখ</th>
             </tr>
           </thead>
           <tbody id="today-classes-body">
@@ -1286,11 +1343,13 @@
     function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
     let currentSubject = null;
+    let highlightedClassTimestamp = null;
     const loginPage = $('#login-page');
     const mainPage = $('#main-page');
     const subjectPage = $('#subject-page');
     const warningModal = $('#warning-modal');
     let allClasses = [];
+    let groupedClassesCache = {};
 
     const availableSubjects = [
       "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
@@ -1322,7 +1381,7 @@
       const expiryTime = localStorage.getItem(LOGIN_EXPIRY_KEY);
       const isLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY);
       
-      if (!expiryTime || !isLoggedIn) {
+      if (!expiryTime || !isLoggedIn || isLoggedIn !== 'true') {
         return false;
       }
       
@@ -1363,7 +1422,7 @@
     }
 
     function checkPassword() {
-      const password = $('#password').value;
+      const password = $('#password').value.trim();
       const errorElement = $('#error-message');
       
       if (password === 'USERDAKHIL26') {
@@ -1406,14 +1465,9 @@
       if (!timestamp) return getTodayDate();
 
       try {
-        if (typeof timestamp === 'string') {
-          const date = new Date(timestamp);
-          if (!isNaN(date)) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-          }
+        const date = new Date(timestamp);
+        if (!isNaN(date)) {
+          return date.toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
         }
         return getTodayDate();
       } catch (error) {
@@ -1428,11 +1482,7 @@
       try {
         const date = new Date(timestamp);
         if (!isNaN(date)) {
-          const hours = date.getHours();
-          const minutes = String(date.getMinutes()).padStart(2, '0');
-          const period = hours >= 12 ? 'PM' : 'AM';
-          const hour12 = hours % 12 || 12;
-          return `${hour12}:${minutes} ${period}`;
+          return date.toLocaleTimeString('en-US', { timeZone: 'Asia/Dhaka', hour: 'numeric', minute: '2-digit', hour12: true });
         }
         return '3:37 PM';
       } catch (error) {
@@ -1512,15 +1562,7 @@
 
     function normalizeRows(rows) {
       try {
-        const sortedRows = rows.slice().sort((a, b) => {
-          const timeA = new Date(a.timestamp || 0).getTime();
-          const timeB = new Date(b.timestamp || 0).getTime();
-          return timeB - timeA;
-        });
-
-        const subjectCounters = {};
-        
-        return sortedRows.map(row => {
+        return rows.map(row => {
           const timestamp = row.timestamp || '';
           const subjectFromSheet = row.subject || 'Unknown Subject';
           const link = row.link || '#';
@@ -1528,13 +1570,8 @@
           const date = getDateFromTimestamp(timestamp);
           const time = getTimeFromTimestamp(timestamp);
           const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
+          const serial = row.serial || 1;
 
-          if (!subjectCounters[matchedSubject]) {
-            subjectCounters[matchedSubject] = 0;
-          }
-          
-          subjectCounters[matchedSubject]++;
-          
           return {
             subject: matchedSubject,
             originalSubject: subjectFromSheet,
@@ -1542,7 +1579,7 @@
             title: title,
             date: date,
             time: time,
-            serial: subjectCounters[matchedSubject],
+            serial: serial,
             timestamp: timestamp
           };
         });
@@ -1552,17 +1589,95 @@
       }
     }
 
-    function isExamLinkExpired(timestamp) {
+    function isExamTimeExpired(timestamp) {
       if (!timestamp) return false;
       try {
         const examTime = new Date(timestamp).getTime();
         const now = new Date().getTime();
-        const tenHoursInMs = 10 * 60 * 60 * 1000;
-        return (now - examTime) > tenHoursInMs;
+        const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+        return (now - examTime) > twentyFourHoursInMs;
       } catch (error) {
         console.error("Exam expiry check error:", error, timestamp);
         return false;
       }
+    }
+
+    function filterClassesByTimeRange(range) {
+      const now = new Date();
+      const today = getTodayDate();
+
+      if (range === 'today') {
+        return allClasses.filter(cls => cls && cls.date === today);
+      } else if (range === 'all') {
+        return allClasses;
+      }
+
+      const weekAgo = new Date(now.setDate(now.getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+      const monthAgo = new Date(now.setMonth(now.getMonth() - 1)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+
+      return allClasses.filter(cls => {
+        if (!cls || !cls.date) return false;
+        if (range === 'week') {
+          return cls.date >= weekAgo && cls.date <= today;
+        } else if (range === 'month') {
+          return cls.date >= monthAgo && cls.date <= today;
+        }
+        return true;
+      });
+    }
+
+    function groupClassesBySubject(classes) {
+      if (groupedClassesCache[JSON.stringify(classes)]) {
+        return groupedClassesCache[JSON.stringify(classes)];
+      }
+
+      const grouped = classes.reduce((acc, cls) => {
+        if (!cls || !cls.subject) return acc;
+        if (!acc[cls.subject]) {
+          acc[cls.subject] = [];
+        }
+        acc[cls.subject].push(cls);
+        return acc;
+      }, {});
+
+      Object.keys(grouped).forEach(subject => {
+        grouped[subject].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      });
+
+      groupedClassesCache[JSON.stringify(classes)] = grouped;
+      return grouped;
+    }
+
+    function renderTodayClassesSummary(classes) {
+      const container = $('#today-classes-body');
+      const sortValue = $('#sort-classes').value;
+
+      if (!classes || classes.length === 0) {
+        container.innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;">আজকের জন্য কোন ক্লাস পাওয়া যায়নি</td></tr>`;
+        return;
+      }
+
+      let tableHTML = '';
+      classes.forEach(cls => {
+        if (!cls) return;
+        const displayTime = sortValue === 'today' ? cls.time : formatDateToBangla(cls.date);
+        tableHTML += `
+          <tr data-subject="${cls.subject}" data-timestamp="${cls.timestamp}">
+            <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
+            <td class="class-info bangla-font">${cls.title}</td>
+            <td class="bangla-font">${displayTime}</td>
+          </tr>
+        `;
+      });
+      container.innerHTML = tableHTML;
+
+      $all('#today-classes-body tr').forEach(row => {
+        row.addEventListener('click', () => {
+          const subject = row.getAttribute('data-subject');
+          highlightedClassTimestamp = row.getAttribute('data-timestamp');
+          showSubjectPage(subject, true);
+        });
+      });
     }
 
     function renderCards(rows, root) {
@@ -1577,33 +1692,36 @@
 
         const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
         let buttonText;
-        let isDisabled = false;
-        let link = r.link;
+        let isExpired = false;
 
         if (specialFolders.includes(r.subject)) {
           buttonText = "দেখুন";
         } else if (r.subject === "মিশন") {
           buttonText = "মিশন সম্পন্ন করুন";
         } else if (r.subject === "ইক্সাম") {
-          if (isExamLinkExpired(r.timestamp)) {
-            buttonText = "পরীক্ষায় অংশগ্রহণ করার সময় শেষ হয়ে গেছে";
-            isDisabled = true;
-            link = "#";
-          } else {
-            buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
-          }
+          buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
+          isExpired = isExamTimeExpired(r.timestamp);
         } else {
           buttonText = "ক্লাস দেখুন";
         }
 
         const card = document.createElement('div');
         card.className = 'card fade-in';
+        card.setAttribute('data-timestamp', r.timestamp);
+        if (highlightedClassTimestamp === r.timestamp) {
+          card.classList.add('highlight');
+          setTimeout(() => {
+            card.classList.remove('highlight');
+            highlightedClassTimestamp = null;
+          }, 5000);
+        }
         card.innerHTML = `
           <span class="card-badge">#${r.serial}</span>
           <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
           <div class="video-title bangla-font">${r.title}</div>
           <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${formatDateToBangla(r.date)}</span></div>
-          <a class="btn${isDisabled ? ' disabled' : ''}" ${isDisabled ? '' : 'target="_blank" rel="noopener"'} href="${link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
+          ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
+          <a class="btn" target="_blank" rel="noopener" href="${r.link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
         `;
         root.appendChild(card);
       });
@@ -1614,147 +1732,134 @@
       return classes.filter(cls => cls && cls.date === today);
     }
 
-    function renderTodayClassesSummary(classes) {
-      const today = getTodayDate();
-      const todayClasses = filterTodayClasses(classes);
-      const container = $('#today-classes-body');
-
-      if (!todayClasses || todayClasses.length === 0) {
-        container.innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;">আজকের জন্য কোন ক্লাস পাওয়া যায়নি</td></tr>`;
+    async function loadInitialData() {
+      if (!checkLoginExpiry()) {
+        logout();
         return;
       }
 
-      let tableHTML = '';
-      todayClasses.forEach(cls => {
-        if (!cls) return;
-        tableHTML += `
-          <tr>
-            <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
-            <td class="class-info bangla-font">${cls.title}</td>
-            <td class="bangla-font">${cls.time}</td>
-          </tr>
-        `;
-      });
-      container.innerHTML = tableHTML;
+      const rows = await fetchData();
+      allClasses = normalizeRows(rows);
+      renderTodayClassesSummary(filterTodayClasses(allClasses));
+
+      showAddClassButton();
     }
 
-    function sortByTime(rows, order = 'desc') {
-      if (!rows) return [];
-      return rows.filter(r => r).slice().sort((a, b) => {
-        const timeA = new Date(a.timestamp).getTime();
-        const timeB = new Date(b.timestamp).getTime();
-        return order === 'asc' ? timeA - timeB : timeB - timeA;
-      });
+    function showSubjectPage(subject, fromTable = false) {
+  if (!subject) return;
+
+  currentSubject = subject;
+  mainPage.style.display = 'none';
+  subjectPage.style.display = 'block';
+  $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
+
+  // শুধুমাত্র টেবিল থেকে সিলেক্ট করা হলে স্ক্রল না করে নিচে স্ক্রলিং হ্যান্ডল করা হবে
+  if (!fromTable) {
+    scrollToTop();
+  }
+
+  const groupedClasses = groupClassesBySubject(allClasses);
+  const classes = groupedClasses[subject] || [];
+  renderCards(classes, $('#classGrid'));
+
+  if (fromTable && highlightedClassTimestamp) {
+    const card = $(`#classGrid .card[data-timestamp="${highlightedClassTimestamp}"]`);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      // হাইলাইট ৫ সেকেন্ড পর সরে যাবে
+      setTimeout(() => {
+        card.classList.remove('highlight');
+        highlightedClassTimestamp = null;
+      }, 5000);
     }
+  }
+}
 
-    function showSubjectPage(subject) {
-      currentSubject = subject;
-      $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
-      mainPage.style.display = 'none';
-      subjectPage.style.display = 'block';
-      scrollToTop();
-      loadSubjectData(subject);
-    }
+$('#refresh-data-btn').addEventListener('click', async () => {
+  $('#today-classes-body').innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;"><div class="loading"></div> লোড হচ্ছে...</td></tr>`;
+  await loadInitialData();
+});
 
-    function showMainPage() {
-      subjectPage.style.display = 'none';
-      mainPage.style.display = 'block';
-      currentSubject = null;
-      scrollToTop();
-    }
+$('#sort-classes').addEventListener('change', (e) => {
+  const range = e.target.value;
+  const filteredClasses = filterClassesByTimeRange(range);
+  renderTodayClassesSummary(filteredClasses);
+});
 
-    function loadSubjectData(subject) {
-      const grid = $('#classGrid');
-      const searchInput = $('#search');
-      const sortSelect = $('#sort');
+$('#search-subjects').addEventListener('input', (e) => {
+  const searchTerm = e.target.value.toLowerCase().trim();
+  const subjectLinks = $all('.subject-link');
 
-      grid.innerHTML = '<div class="card"><div class="subject bangla-font">লোড হচ্ছে... <span class="loading"></span></div></div>';
+  subjectLinks.forEach(link => {
+    const subjectName = link.getAttribute('data-name').toLowerCase();
+    const displayStyle = searchTerm === '' || subjectName.includes(searchTerm) ? '' : 'none';
+    link.style.display = displayStyle;
+  });
+});
 
-      let rows = allClasses.filter(r => r && String(r.subject).trim() === subject);
-      rows = sortByTime(rows, 'desc');
-      renderCards(rows, grid);
+$('#search').addEventListener('input', (e) => {
+  const searchTerm = e.target.value.toLowerCase().trim();
+  const groupedClasses = groupClassesBySubject(allClasses);
+  const classes = groupedClasses[currentSubject] || [];
+  const filteredClasses = classes.filter(cls => 
+    cls.title.toLowerCase().includes(searchTerm) || 
+    cls.subject.toLowerCase().includes(searchTerm)
+  );
+  renderCards(filteredClasses, $('#classGrid'));
+});
 
-      searchInput.addEventListener('input', () => {
-        const q = searchInput.value.toLowerCase();
-        const filtered = rows.filter(r =>
-          (r.subject || '').toLowerCase().includes(q) ||
-          (r.title || '').toLowerCase().includes(q)
-        );
-        renderCards(filtered, grid);
-      });
+$('#sort').addEventListener('change', (e) => {
+  const sortOrder = e.target.value;
+  const groupedClasses = groupClassesBySubject(allClasses);
+  let classes = groupedClasses[currentSubject] || [];
+  
+  classes = [...classes].sort((a, b) => {
+    const dateA = new Date(a.timestamp).getTime();
+    const dateB = new Date(b.timestamp).getTime();
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
+  
+  renderCards(classes, $('#classGrid'));
+});
 
-      sortSelect.addEventListener('change', () => {
-        const order = sortSelect.value;
-        const sorted = sortByTime(rows, order);
-        renderCards(sorted, grid);
-      });
-    }
+$all('.subject-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const subject = link.getAttribute('data-name');
+    showSubjectPage(subject);
+  });
+});
 
-    function setupRefreshButton() {
-      const refreshButton = $('#refresh-data-btn');
-      if (refreshButton) {
-        refreshButton.addEventListener('click', async () => {
-          refreshButton.disabled = true;
-          refreshButton.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> <span class="bangla-font">রিফ্রেশ হচ্ছে...</span>';
-          try {
-            const data = await fetchData();
-            allClasses = normalizeRows(data);
-            renderTodayClassesSummary(allClasses);
-            if (currentSubject) {
-              loadSubjectData(currentSubject);
-            }
-            showNotification("ডেটা সফলভাবে রিফ্রেশ হয়েছে!", false);
-          } catch (error) {
-            showNotification("ডেটা রিফ্রেশ করতে সমস্যা হয়েছে", true);
-          } finally {
-            refreshButton.disabled = false;
-            refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> <span class="bangla-font">ডেটা রিফ্রেশ করুন</span>';
-          }
-        });
-      }
-    }
+$('.back-button').addEventListener('click', (e) => {
+  e.preventDefault();
+  showMainPage();
+});
 
-    function setupEventListeners() {
-      $all('.subject-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const subject = link.getAttribute('data-name');
-          showSubjectPage(subject);
-        });
-      });
+function showMainPage() {
+  subjectPage.style.display = 'none';
+  mainPage.style.display = 'block';
+  scrollToTop();
+}
 
-      $('.back-button').addEventListener('click', (e) => {
-        e.preventDefault();
-        showMainPage();
-      });
+// Initialize the page
+if (checkLoginExpiry()) {
+  loginPage.style.display = 'none';
+  mainPage.style.display = 'block';
+  showAddClassButton();
+  loadInitialData();
+} else {
+  loginPage.style.display = 'flex';
+  mainPage.style.display = 'none';
+  subjectPage.style.display = 'none';
+}
 
-      $('#search-subjects').addEventListener('input', () => {
-        const query = $('#search-subjects').value.toLowerCase();
-        $all('.subject-link').forEach(pill => {
-          const subject = pill.getAttribute('data-name').toLowerCase();
-          pill.style.display = subject.includes(query) ? '' : 'none';
-        });
-      });
-    }
+// Auto-refresh data every 30 minutes
+setInterval(async () => {
+  if (checkLoginExpiry()) {
+    await loadInitialData();
+  }
+}, 30 * 60 * 1000);
 
-    async function loadInitialData() {
-      const data = await fetchData();
-      allClasses = normalizeRows(data);
-      renderTodayClassesSummary(allClasses);
-      setupEventListeners();
-      setupRefreshButton();
-    }
-
-    if (checkLoginExpiry()) {
-      loginPage.style.display = 'none';
-      mainPage.style.display = 'block';
-      if (getUserRole() === 'owner') {
-        showAddClassButton();
-      }
-      loadInitialData();
-    } else {
-      logout();
-    }
-  </script>
+</script>
 </body>
 </html>

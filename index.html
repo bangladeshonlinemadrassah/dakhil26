@@ -1760,7 +1760,13 @@
 
   const groupedClasses = groupClassesBySubject(allClasses);
   const classes = groupedClasses[subject] || [];
-  renderCards(classes, $('#classGrid'));
+  // ফোল্ডারের ক্লাসগুলোকে পুরানো থেকে নতুন সাজানো (নিচ থেকে উপরে নাম্বারিং-এর জন্য)
+  const sortedClasses = [...classes].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  // নাম্বারিং যোগ করা
+  sortedClasses.forEach((cls, index) => {
+    cls.serial = index + 1; // পুরানো ক্লাস #1, নতুন ক্লাস সর্বোচ্চ নম্বর
+  });
+  renderCards(sortedClasses, $('#classGrid'));
 
   if (fromTable && highlightedClassTimestamp) {
     const card = $(`#classGrid .card[data-timestamp="${highlightedClassTimestamp}"]`);
@@ -1805,7 +1811,12 @@ $('#search').addEventListener('input', (e) => {
     cls.title.toLowerCase().includes(searchTerm) || 
     cls.subject.toLowerCase().includes(searchTerm)
   );
-  renderCards(filteredClasses, $('#classGrid'));
+  // ফিল্টার করা ক্লাসগুলোর জন্য নাম্বারিং পুনরায় সেট করা
+  const sortedFilteredClasses = [...filteredClasses].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  sortedFilteredClasses.forEach((cls, index) => {
+    cls.serial = index + 1;
+  });
+  renderCards(sortedFilteredClasses, $('#classGrid'));
 });
 
 $('#sort').addEventListener('change', (e) => {
@@ -1817,6 +1828,11 @@ $('#sort').addEventListener('change', (e) => {
     const dateA = new Date(a.timestamp).getTime();
     const dateB = new Date(b.timestamp).getTime();
     return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
+  
+  // নাম্বারিং পুনরায় সেট করা (পুরানো থেকে নতুন)
+  classes.forEach((cls, index) => {
+    cls.serial = index + 1;
   });
   
   renderCards(classes, $('#classGrid'));

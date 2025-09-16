@@ -1853,13 +1853,6 @@ if (checkLoginExpiry()) {
   subjectPage.style.display = 'none';
 }
 
-// Auto-refresh data every 30 minutes
-setInterval(async () => {
-  if (checkLoginExpiry()) {
-    await loadInitialData();
-  }
-}, 30 * 60 * 1000);
-
 </script>
 </body>
 </html>

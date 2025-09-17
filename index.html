@@ -1716,7 +1716,7 @@
           }, 5000);
         }
         card.innerHTML = `
-          <span class="card-badge">#${r.serial}</span>
+          <span class="card-badge bangla-font">ক্লাস ${r.serial}</span>
           <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
           <div class="video-title bangla-font">${r.title}</div>
           <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${formatDateToBangla(r.date)}</span></div>
@@ -1746,129 +1746,145 @@
     }
 
     function showSubjectPage(subject, fromTable = false) {
-  if (!subject) return;
+      if (!subject) return;
 
-  currentSubject = subject;
-  mainPage.style.display = 'none';
-  subjectPage.style.display = 'block';
-  $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
+      currentSubject = subject;
+      mainPage.style.display = 'none';
+      subjectPage.style.display = 'block';
+      $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
 
-  // শুধুমাত্র টেবিল থেকে সিলেক্ট করা হলে স্ক্রল না করে নিচে স্ক্রলিং হ্যান্ডল করা হবে
-  if (!fromTable) {
-    scrollToTop();
-  }
+      if (!fromTable) {
+        scrollToTop();
+      }
 
-  const groupedClasses = groupClassesBySubject(allClasses);
-  const classes = groupedClasses[subject] || [];
-  // ফোল্ডারের ক্লাসগুলোকে পুরানো থেকে নতুন সাজানো (নিচ থেকে উপরে নাম্বারিং-এর জন্য)
-  const sortedClasses = [...classes].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-  // নাম্বারিং যোগ করা
-  sortedClasses.forEach((cls, index) => {
-    cls.serial = index + 1; // পুরানো ক্লাস #1, নতুন ক্লাস সর্বোচ্চ নম্বর
-  });
-  renderCards(sortedClasses, $('#classGrid'));
+      const groupedClasses = groupClassesBySubject(allClasses);
+      const classes = groupedClasses[subject] || [];
+      // Sort classes newest to oldest for default display (newest at top)
+      const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      // Assign serial numbers: oldest class (bottom) gets #1, newest (top) gets highest
+      sortedClasses.forEach((cls, index, arr) => {
+        cls.serial = arr.length - index; // Oldest class #1, increments upwards
+      });
 
-  if (fromTable && highlightedClassTimestamp) {
-    const card = $(`#classGrid .card[data-timestamp="${highlightedClassTimestamp}"]`);
-    if (card) {
-      card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-      // হাইলাইট ৫ সেকেন্ড পর সরে যাবে
-      setTimeout(() => {
-        card.classList.remove('highlight');
-        highlightedClassTimestamp = null;
-      }, 5000);
+      // Apply sort option for display order
+      const sortOrder = $('#sort').value;
+      const displayClasses = sortOrder === 'asc' 
+        ? sortedClasses.slice().reverse() // Oldest first (oldest at top)
+        : sortedClasses; // Newest first (newest at top)
+
+      renderCards(displayClasses, $('#classGrid'));
+
+      if (fromTable && highlightedClassTimestamp) {
+        const card = $(`#classGrid .card[data-timestamp="${highlightedClassTimestamp}"]`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+          // Highlight removes after 5 seconds
+          setTimeout(() => {
+            card.classList.remove('highlight');
+            highlightedClassTimestamp = null;
+          }, 5000);
+        }
+      }
     }
-  }
-}
 
-$('#refresh-data-btn').addEventListener('click', async () => {
-  $('#today-classes-body').innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;"><div class="loading"></div> লোড হচ্ছে...</td></tr>`;
-  await loadInitialData();
-});
+    $('#search').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      const groupedClasses = groupClassesBySubject(allClasses);
+      const classes = groupedClasses[currentSubject] || [];
+      const filteredClasses = classes.filter(cls => 
+        cls.title.toLowerCase().includes(searchTerm) || 
+        cls.subject.toLowerCase().includes(searchTerm)
+      );
+      // Sort filtered classes newest to oldest
+      const sortedFilteredClasses = [...filteredClasses].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      // Assign serial numbers: oldest class #1
+      sortedFilteredClasses.forEach((cls, index, arr) => {
+        cls.serial = arr.length - index;
+      });
 
-$('#sort-classes').addEventListener('change', (e) => {
-  const range = e.target.value;
-  const filteredClasses = filterClassesByTimeRange(range);
-  renderTodayClassesSummary(filteredClasses);
-});
+      // Apply sort option for display order
+      const sortOrder = $('#sort').value;
+      const displayClasses = sortOrder === 'asc' 
+        ? sortedFilteredClasses.slice().reverse() 
+        : sortedFilteredClasses;
 
-$('#search-subjects').addEventListener('input', (e) => {
-  const searchTerm = e.target.value.toLowerCase().trim();
-  const subjectLinks = $all('.subject-link');
+      renderCards(displayClasses, $('#classGrid'));
+    });
 
-  subjectLinks.forEach(link => {
-    const subjectName = link.getAttribute('data-name').toLowerCase();
-    const displayStyle = searchTerm === '' || subjectName.includes(searchTerm) ? '' : 'none';
-    link.style.display = displayStyle;
-  });
-});
+    $('#sort').addEventListener('change', (e) => {
+      const sortOrder = e.target.value;
+      const groupedClasses = groupClassesBySubject(allClasses);
+      const classes = groupedClasses[currentSubject] || [];
+      
+      // Sort classes newest to oldest and assign serial numbers
+      const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      sortedClasses.forEach((cls, index, arr) => {
+        cls.serial = arr.length - index; // Oldest class #1
+      });
+      
+      // Apply sort option for display order
+      const displayClasses = sortOrder === 'asc' 
+        ? sortedClasses.slice().reverse() // Oldest first
+        : sortedClasses; // Newest first
+      
+      renderCards(displayClasses, $('#classGrid'));
+    });
 
-$('#search').addEventListener('input', (e) => {
-  const searchTerm = e.target.value.toLowerCase().trim();
-  const groupedClasses = groupClassesBySubject(allClasses);
-  const classes = groupedClasses[currentSubject] || [];
-  const filteredClasses = classes.filter(cls => 
-    cls.title.toLowerCase().includes(searchTerm) || 
-    cls.subject.toLowerCase().includes(searchTerm)
-  );
-  // ফিল্টার করা ক্লাসগুলোর জন্য নাম্বারিং পুনরায় সেট করা
-  const sortedFilteredClasses = [...filteredClasses].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-  sortedFilteredClasses.forEach((cls, index) => {
-    cls.serial = index + 1;
-  });
-  renderCards(sortedFilteredClasses, $('#classGrid'));
-});
+    $('#sort-classes').addEventListener('change', () => {
+      const range = $('#sort-classes').value;
+      const filteredClasses = filterClassesByTimeRange(range);
+      renderTodayClassesSummary(filteredClasses);
+    });
 
-$('#sort').addEventListener('change', (e) => {
-  const sortOrder = e.target.value;
-  const groupedClasses = groupClassesBySubject(allClasses);
-  let classes = groupedClasses[currentSubject] || [];
-  
-  classes = [...classes].sort((a, b) => {
-    const dateA = new Date(a.timestamp).getTime();
-    const dateB = new Date(b.timestamp).getTime();
-    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-  });
-  
-  // নাম্বারিং পুনরায় সেট করা (পুরানো থেকে নতুন)
-  classes.forEach((cls, index) => {
-    cls.serial = index + 1;
-  });
-  
-  renderCards(classes, $('#classGrid'));
-});
+    $('#search-subjects').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      const subjectLinks = $all('.subject-link');
+      subjectLinks.forEach(link => {
+        const subjectName = link.getAttribute('data-name').toLowerCase();
+        link.style.display = subjectName.includes(searchTerm) ? '' : 'none';
+      });
+    });
 
-$all('.subject-link').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const subject = link.getAttribute('data-name');
-    showSubjectPage(subject);
-  });
-});
+    $('#refresh-data-btn').addEventListener('click', async () => {
+      const rows = await fetchData();
+      allClasses = normalizeRows(rows);
+      renderTodayClassesSummary(filterClassesByTimeRange($('#sort-classes').value));
+      if (currentSubject) {
+        showSubjectPage(currentSubject);
+      }
+      showNotification("ডেটা রিফ্রেশ করা হয়েছে!");
+    });
 
-$('.back-button').addEventListener('click', (e) => {
-  e.preventDefault();
-  showMainPage();
-});
+    $all('.subject-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const subject = link.getAttribute('data-name');
+        showSubjectPage(subject);
+      });
+    });
 
-function showMainPage() {
-  subjectPage.style.display = 'none';
-  mainPage.style.display = 'block';
-  scrollToTop();
-}
+    $('.back-button').addEventListener('click', (e) => {
+      e.preventDefault();
+      showMainPage();
+    });
 
-// Initialize the page
-if (checkLoginExpiry()) {
-  loginPage.style.display = 'none';
-  mainPage.style.display = 'block';
-  showAddClassButton();
-  loadInitialData();
-} else {
-  loginPage.style.display = 'flex';
-  mainPage.style.display = 'none';
-  subjectPage.style.display = 'none';
-}
+    function showMainPage() {
+      subjectPage.style.display = 'none';
+      mainPage.style.display = 'block';
+      scrollToTop();
+    }
 
-</script>
+    // Initialize the page
+    if (checkLoginExpiry()) {
+      loginPage.style.display = 'none';
+      mainPage.style.display = 'block';
+      showAddClassButton();
+      loadInitialData();
+    } else {
+      loginPage.style.display = 'flex';
+      mainPage.style.display = 'none';
+      subjectPage.style.display = 'none';
+    }
+  </script>
 </body>
 </html>

@@ -1583,14 +1583,14 @@ function normalizeRows(rows) {
         return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
       });
 
-      // প্রতিটি ক্লাসের জন্য সিরিয়াল নাম্বার যুক্ত করা (নতুনতম ক্লাস সর্বোচ্চ নাম্বার পাবে)
+      // প্রতিটি ক্লাসের জন্য সিরিয়াল নাম্বার যুক্ত করা (পুরানো ক্লাস থেকে শুরু)
       sortedClasses.forEach((row, index) => {
         const timestamp = row.timestamp || '';
         const link = row.link || '#';
         const title = row.title || 'ক্লাস ভিডিও';
         const date = getDateFromTimestamp(timestamp);
         const time = getTimeFromTimestamp(timestamp);
-        const serial = sortedClasses.length - index; // নতুনতম ক্লাস সর্বোচ্চ নাম্বার পাবে
+        const serial = index + 1; // পুরানো ক্লাস থেকে নাম্বারিং শুরু (১ থেকে)
 
         normalizedRows.push({
           subject: subject,

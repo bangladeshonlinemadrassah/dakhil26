@@ -1336,422 +1336,443 @@
     </div>
   </div>
   <div id="notification" class="notification"></div>
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwZnb6Lr-_IN1FzgvhQ-em6NjaqVIWWpmEKHinchUbY4Bt8NhOssIx_dRJ4MiSFmfKJ4g/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbwZnb6Lr-_IN1FzgvhQ-em6NjaqVIWWpmEKHinchUbY4Bt8NhOssIx_dRJ4MiSFmfKJ4g/exec";
 
-    function $(sel, root = document) { return root.querySelector(sel); }
-    function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
+function $(sel, root = document) { return root.querySelector(sel); }
+function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
-    let currentSubject = null;
-    let highlightedClassTimestamp = null;
-    const loginPage = $('#login-page');
-    const mainPage = $('#main-page');
-    const subjectPage = $('#subject-page');
-    const warningModal = $('#warning-modal');
-    let allClasses = [];
-    let groupedClassesCache = {};
+let currentSubject = null;
+let highlightedClassTimestamp = null;
+const loginPage = $('#login-page');
+const mainPage = $('#main-page');
+const subjectPage = $('#subject-page');
+const warningModal = $('#warning-modal');
+let allClasses = [];
+let groupedClassesCache = {};
 
-    const availableSubjects = [
-      "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
-      "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
-      "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
-      "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
-      "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
-      "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
-      "ইক্সাম", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"
-    ];
+const availableSubjects = [
+  "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
+  "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
+  "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
+  "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
+  "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
+  "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
+  "ইক্সাম", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"
+];
 
-    const LOGIN_EXPIRY_KEY = 'dakhil26_login_expiry';
-    const IS_LOGGED_IN_KEY = 'dakhil26_is_logged_in';
-    const USER_ROLE_KEY = 'dakhil26_user_role';
+const LOGIN_EXPIRY_KEY = 'dakhil26_login_expiry';
+const IS_LOGGED_IN_KEY = 'dakhil26_is_logged_in';
+const USER_ROLE_KEY = 'dakhil26_user_role';
 
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setLoginExpiry(role) {
+  const now = new Date();
+  const oneMonthFromNow = new Date(now.setMonth(now.getMonth() + 1));
+  localStorage.setItem(LOGIN_EXPIRY_KEY, oneMonthFromNow.getTime());
+  localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
+  localStorage.setItem(USER_ROLE_KEY, role);
+}
+
+function checkLoginExpiry() {
+  const expiryTime = localStorage.getItem(LOGIN_EXPIRY_KEY);
+  const isLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY);
+  
+  if (!expiryTime || !isLoggedIn || isLoggedIn !== 'true') {
+    return false;
+  }
+  
+  const now = new Date().getTime();
+  return now < parseInt(expiryTime);
+}
+
+function getUserRole() {
+  return localStorage.getItem(USER_ROLE_KEY) || 'user';
+}
+
+function logout() {
+  localStorage.removeItem(LOGIN_EXPIRY_KEY);
+  localStorage.removeItem(IS_LOGGED_IN_KEY);
+  localStorage.removeItem(USER_ROLE_KEY);
+  loginPage.style.display = 'flex';
+  mainPage.style.display = 'none';
+  subjectPage.style.display = 'none';
+}
+
+function showWarningModal() {
+  warningModal.classList.add('show');
+}
+
+function closeWarningModal() {
+  warningModal.classList.remove('show');
+}
+
+function showNotification(message, isError = false, isWarning = false) {
+  const notification = $('#notification');
+  notification.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'}"></i> ${message}`;
+  notification.className = 'notification ' + (isError ? 'error' : isWarning ? 'warning' : 'success');
+  notification.classList.add('show');
+
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 3000);
+}
+
+function checkPassword() {
+  const password = $('#password').value.trim();
+  const errorElement = $('#error-message');
+  
+  if (password === 'USERDAKHIL26') {
+    setLoginExpiry('user');
+    loginPage.style.display = 'none';
+    mainPage.style.display = 'block';
+    showWarningModal();
+    loadInitialData();
+    scrollToTop();
+  } else if (password === 'OWNERDAKHIL26') {
+    setLoginExpiry('owner');
+    loginPage.style.display = 'none';
+    mainPage.style.display = 'block';
+    showWarningModal();
+    showAddClassButton();
+    loadInitialData();
+    scrollToTop();
+  } else {
+    errorElement.style.display = 'block';
+    setTimeout(() => {
+      errorElement.style.display = 'none';
+    }, 3000);
+  }
+}
+
+function showAddClassButton() {
+  const addClassBtn = $('#add-class-btn');
+  if (addClassBtn && getUserRole() === 'owner') {
+    addClassBtn.style.display = 'inline-flex';
+  }
+}
+
+$('#password').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    checkPassword();
+  }
+});
+
+function getDateFromTimestamp(timestamp) {
+  if (!timestamp) return getTodayDate();
+
+  try {
+    const date = new Date(timestamp);
+    if (!isNaN(date)) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
     }
+    return getTodayDate();
+  } catch (error) {
+    console.error("Timestamp parsing error:", error, timestamp);
+    return getTodayDate();
+  }
+}
 
-    function setLoginExpiry(role) {
-      const now = new Date();
-      const oneMonthFromNow = new Date(now.setMonth(now.getMonth() + 1));
-      localStorage.setItem(LOGIN_EXPIRY_KEY, oneMonthFromNow.getTime());
-      localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
-      localStorage.setItem(USER_ROLE_KEY, role);
+function getTimeFromTimestamp(timestamp) {
+  if (!timestamp) return '12:00 AM';
+
+  try {
+    const date = new Date(timestamp);
+    if (!isNaN(date)) {
+      return date.toLocaleTimeString('en-US', { 
+        timeZone: 'Asia/Dhaka', 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+      });
     }
+    return '12:00 AM';
+  } catch (error) {
+    console.error("Time parsing error:", error, timestamp);
+    return '12:00 AM';
+  }
+}
 
-    function checkLoginExpiry() {
-      const expiryTime = localStorage.getItem(LOGIN_EXPIRY_KEY);
-      const isLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY);
-      
-      if (!expiryTime || !isLoggedIn || isLoggedIn !== 'true') {
-        return false;
-      }
-      
-      const now = new Date().getTime();
-      return now < parseInt(expiryTime);
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
+}
+
+function formatDateToBangla(dateStr) {
+  if (!dateStr) return '';
+
+  try {
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+      return dateStr; // ইতিমধ্যে DD-MM-YYYY ফরম্যাটে থাকলে রিটার্ন
     }
+    const [year, month, day] = dateStr.split('-');
+    return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
+  } catch (error) {
+    console.error("Date formatting error:", error, dateStr);
+    return dateStr;
+  }
+}
 
-    function getUserRole() {
-      return localStorage.getItem(USER_ROLE_KEY) || 'user';
+function findBestMatchingSubject(subjectFromSheet) {
+  if (!subjectFromSheet) return null;
+
+  const cleanSubject = subjectFromSheet.toString().trim();
+  for (const availableSubject of availableSubjects) {
+    if (cleanSubject === availableSubject) {
+      return availableSubject;
     }
+  }
+  return cleanSubject;
+}
 
-    function logout() {
-      localStorage.removeItem(LOGIN_EXPIRY_KEY);
-      localStorage.removeItem(IS_LOGGED_IN_KEY);
-      localStorage.removeItem(USER_ROLE_KEY);
-      loginPage.style.display = 'flex';
-      mainPage.style.display = 'none';
-      subjectPage.style.display = 'none';
-    }
-
-    function showWarningModal() {
-      warningModal.classList.add('show');
-    }
-
-    function closeWarningModal() {
-      warningModal.classList.remove('show');
-    }
-
-    function showNotification(message, isError = false, isWarning = false) {
-      const notification = $('#notification');
-      notification.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'}"></i> ${message}`;
-      notification.className = 'notification ' + (isError ? 'error' : isWarning ? 'warning' : 'success');
-      notification.classList.add('show');
-
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 3000);
-    }
-
-    function checkPassword() {
-      const password = $('#password').value.trim();
-      const errorElement = $('#error-message');
-      
-      if (password === 'USERDAKHIL26') {
-        setLoginExpiry('user');
-        loginPage.style.display = 'none';
-        mainPage.style.display = 'block';
-        showWarningModal();
-        loadInitialData();
-        scrollToTop();
-      } else if (password === 'OWNERDAKHIL26') {
-        setLoginExpiry('owner');
-        loginPage.style.display = 'none';
-        mainPage.style.display = 'block';
-        showWarningModal();
-        showAddClassButton();
-        loadInitialData();
-        scrollToTop();
-      } else {
-        errorElement.style.display = 'block';
-        setTimeout(() => {
-          errorElement.style.display = 'none';
-        }, 3000);
-      }
-    }
-
-    function showAddClassButton() {
-      const addClassBtn = $('#add-class-btn');
-      if (addClassBtn && getUserRole() === 'owner') {
-        addClassBtn.style.display = 'inline-flex';
-      }
-    }
-
-    $('#password').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        checkPassword();
+async function fetchData() {
+  try {
+    showNotification("ডেটা লোড হচ্ছে...", false);
+    const res = await fetch(API_URL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
       }
     });
 
-    function getDateFromTimestamp(timestamp) {
-      if (!timestamp) return getTodayDate();
-
-      try {
-        const date = new Date(timestamp);
-        if (!isNaN(date)) {
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-          return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
-        }
-        return getTodayDate();
-      } catch (error) {
-        console.error("Timestamp parsing error:", error, timestamp);
-        return getTodayDate();
-      }
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
 
-    function getTimeFromTimestamp(timestamp) {
-      if (!timestamp) return '12:00 AM';
-
-      try {
-        const date = new Date(timestamp);
-        if (!isNaN(date)) {
-          return date.toLocaleTimeString('en-US', { 
-            timeZone: 'Asia/Dhaka', 
-            hour: 'numeric', 
-            minute: '2-digit', 
-            hour12: true 
-          });
-        }
-        return '12:00 AM';
-      } catch (error) {
-        console.error("Time parsing error:", error, timestamp);
-        return '12:00 AM';
-      }
+    const data = await res.json();
+    if (data && data.ok) {
+      showNotification("ডেটা সফলভাবে লোড হয়েছে!");
+      console.log("API Response:", data);
+      return data.rows || [];
+    } else {
+      throw new Error(data.error || "ডেটা লোড করতে সমস্যা");
     }
+  } catch (error) {
+    console.error("ডেটা লোড করতে সমস্যা:", error);
+    showNotification("ডেটা লোড করা যায়নি: " + error.message, true);
+    return [];
+  }
+}
 
-    function getTodayDate() {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
-    }
-
-    function formatDateToBangla(dateStr) {
-      if (!dateStr) return '';
-
-      try {
-        if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
-          return dateStr; // ইতিমধ্যে DD-MM-YYYY ফরম্যাটে থাকলে রিটার্ন
-        }
-        const [year, month, day] = dateStr.split('-');
-        return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
-      } catch (error) {
-        console.error("Date formatting error:", error, dateStr);
-        return dateStr;
+function normalizeRows(rows) {
+  try {
+    // প্রথমে ক্লাসগুলোকে সাবজেক্ট অনুযায়ী গ্রুপ করা
+    const groupedBySubject = rows.reduce((acc, row) => {
+      const subjectFromSheet = row.subject || 'Unknown Subject';
+      const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
+      if (!acc[matchedSubject]) {
+        acc[matchedSubject] = [];
       }
-    }
+      acc[matchedSubject].push(row);
+      return acc;
+    }, {});
 
-    function findBestMatchingSubject(subjectFromSheet) {
-      if (!subjectFromSheet) return null;
-
-      const cleanSubject = subjectFromSheet.toString().trim();
-      for (const availableSubject of availableSubjects) {
-        if (cleanSubject === availableSubject) {
-          return availableSubject;
-        }
-      }
-      return cleanSubject;
-    }
-
-    async function fetchData() {
-      try {
-        showNotification("ডেটা লোড হচ্ছে...", false);
-        const res = await fetch(API_URL, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-        const data = await res.json();
-        if (data && data.ok) {
-          showNotification("ডেটা সফলভাবে লোড হয়েছে!");
-          console.log("API Response:", data);
-          return data.rows || [];
-        } else {
-          throw new Error(data.error || "ডেটা লোড করতে সমস্যা");
-        }
-      } catch (error) {
-        console.error("ডেটা লোড করতে সমস্যা:", error);
-        showNotification("ডেটা লোড করা যায়নি: " + error.message, true);
-        return [];
-      }
-    }
-
-    function normalizeRows(rows) {
-      try {
-        return rows.map(row => {
-          const timestamp = row.timestamp || '';
-          const subjectFromSheet = row.subject || 'Unknown Subject';
-          const link = row.link || '#';
-          const title = row.title || 'ক্লাস ভিডিও';
-          const date = getDateFromTimestamp(timestamp);
-          const time = getTimeFromTimestamp(timestamp);
-          const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
-          const serial = row.serial || 1;
-
-          return {
-            subject: matchedSubject,
-            originalSubject: subjectFromSheet,
-            link: link,
-            title: title,
-            date: date,
-            time: time,
-            serial: serial,
-            timestamp: timestamp
-          };
-        });
-      } catch (error) {
-        console.error("Rows normalization error:", error);
-        return [];
-      }
-    }
-
-    function isExamTimeExpired(timestamp) {
-      if (!timestamp) return false;
-      try {
-        const examTime = new Date(timestamp).getTime();
-        const now = new Date().getTime();
-        const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
-        return (now - examTime) > twentyFourHoursInMs;
-      } catch (error) {
-        console.error("Exam expiry check error:", error, timestamp);
-        return false;
-      }
-    }
-
-    function filterClassesByTimeRange(range) {
-      const now = new Date();
-      const today = getTodayDate(); // DD-MM-YYYY ফরম্যাটে আজকের তারিখ
-
-      if (range === 'today') {
-        return allClasses.filter(cls => cls && cls.date === today);
-      } else if (range === 'all') {
-        return allClasses;
-      }
-
-      const weekAgo = new Date(now.setDate(now.getDate() - 7));
-      const monthAgo = new Date(now.setMonth(now.getMonth() - 1));
-
-      return allClasses.filter(cls => {
-        if (!cls || !cls.date) return false;
-        const classDateParts = cls.date.split('-'); // DD-MM-YYYY ফরম্যাট
-        const classDate = new Date(`${classDateParts[2]}-${classDateParts[1]}-${classDateParts[0]}`);
-        
-        if (range === 'week') {
-          return classDate >= weekAgo && classDate <= new Date();
-        } else if (range === 'month') {
-          return classDate >= monthAgo && classDate <= new Date();
-        }
-        return true;
-      });
-    }
-
-    function groupClassesBySubject(classes) {
-      if (groupedClassesCache[JSON.stringify(classes)]) {
-        return groupedClassesCache[JSON.stringify(classes)];
-      }
-
-      const grouped = classes.reduce((acc, cls) => {
-        if (!cls || !cls.subject) return acc;
-        if (!acc[cls.subject]) {
-          acc[cls.subject] = [];
-        }
-        acc[cls.subject].push(cls);
-        return acc;
-      }, {});
-
-      Object.keys(grouped).forEach(subject => {
-        grouped[subject].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    // প্রতিটি সাবজেক্টের ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (পুরানো থেকে নতুন)
+    const normalizedRows = [];
+    Object.keys(groupedBySubject).forEach(subject => {
+      // ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (পুরানো থেকে নতুন)
+      const sortedClasses = groupedBySubject[subject].sort((a, b) => {
+        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
       });
 
-      groupedClassesCache[JSON.stringify(classes)] = grouped;
-      return grouped;
-    }
+      // প্রতিটি ক্লাসের জন্য সিরিয়াল নাম্বার যুক্ত করা (নতুনতম ক্লাস সর্বোচ্চ নাম্বার পাবে)
+      sortedClasses.forEach((row, index) => {
+        const timestamp = row.timestamp || '';
+        const link = row.link || '#';
+        const title = row.title || 'ক্লাস ভিডিও';
+        const date = getDateFromTimestamp(timestamp);
+        const time = getTimeFromTimestamp(timestamp);
+        const serial = sortedClasses.length - index; // নতুনতম ক্লাস সর্বোচ্চ নাম্বার পাবে
 
-    function renderTodayClassesSummary(classes) {
-      const container = $('#today-classes-body');
-      const sortValue = $('#sort-classes').value;
-
-      if (!classes || classes.length === 0) {
-        container.innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;">আজকের জন্য কোন ক্লাস পাওয়া যায়নি</td></tr>`;
-        return;
-      }
-
-      let tableHTML = '';
-      classes.forEach(cls => {
-        if (!cls) return;
-        const displayValue = sortValue === 'today' ? cls.time : cls.date;
-        tableHTML += `
-          <tr data-subject="${cls.subject}" data-timestamp="${cls.timestamp}">
-            <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
-            <td class="class-info bangla-font">${cls.title}</td>
-            <td class="bangla-font">${displayValue}</td>
-          </tr>
-        `;
-      });
-      container.innerHTML = tableHTML;
-
-      $all('#today-classes-body tr').forEach(row => {
-        row.addEventListener('click', () => {
-          const subject = row.getAttribute('data-subject');
-          highlightedClassTimestamp = row.getAttribute('data-timestamp');
-          showSubjectPage(subject, true);
+        normalizedRows.push({
+          subject: subject,
+          originalSubject: row.subject,
+          link: link,
+          title: title,
+          date: date,
+          time: time,
+          serial: serial,
+          timestamp: timestamp
         });
       });
+    });
+
+    return normalizedRows;
+  } catch (error) {
+    console.error("Rows normalization error:", error);
+    return [];
+  }
+}
+
+function isExamTimeExpired(timestamp) {
+  if (!timestamp) return false;
+  try {
+    const examTime = new Date(timestamp).getTime();
+    const now = new Date().getTime();
+    const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+    return (now - examTime) > twentyFourHoursInMs;
+  } catch (error) {
+    console.error("Exam expiry check error:", error, timestamp);
+    return false;
+  }
+}
+
+function filterClassesByTimeRange(range) {
+  const now = new Date();
+  const today = getTodayDate(); // DD-MM-YYYY ফরম্যাটে আজকের তারিখ
+
+  if (range === 'today') {
+    return allClasses.filter(cls => cls && cls.date === today);
+  } else if (range === 'all') {
+    return allClasses;
+  }
+
+  const weekAgo = new Date(now.setDate(now.getDate() - 7));
+  const monthAgo = new Date(now.setMonth(now.getMonth() - 1));
+
+  return allClasses.filter(cls => {
+    if (!cls || !cls.date) return false;
+    const classDateParts = cls.date.split('-'); // DD-MM-YYYY ফরম্যাট
+    const classDate = new Date(`${classDateParts[2]}-${classDateParts[1]}-${classDateParts[0]}`);
+    
+    if (range === 'week') {
+      return classDate >= weekAgo && classDate <= new Date();
+    } else if (range === 'month') {
+      return classDate >= monthAgo && classDate <= new Date();
+    }
+    return true;
+  });
+}
+
+function groupClassesBySubject(classes) {
+  if (groupedClassesCache[JSON.stringify(classes)]) {
+    return groupedClassesCache[JSON.stringify(classes)];
+  }
+
+  const grouped = classes.reduce((acc, cls) => {
+    if (!cls || !cls.subject) return acc;
+    if (!acc[cls.subject]) {
+      acc[cls.subject] = [];
+    }
+    acc[cls.subject].push(cls);
+    return acc;
+  }, {});
+
+  // প্রতিটি সাবজেক্টের ক্লাসগুলোকে সিরিয়াল নাম্বার অনুযায়ী সাজানো (নতুনতম উপরে, সর্বোচ্চ সিরিয়াল)
+  Object.keys(grouped).forEach(subject => {
+    grouped[subject].sort((a, b) => b.serial - a.serial);
+  });
+
+  groupedClassesCache[JSON.stringify(classes)] = grouped;
+  return grouped;
+}
+
+function renderTodayClassesSummary(classes) {
+  const container = $('#today-classes-body');
+  const sortValue = $('#sort-classes').value;
+
+  if (!classes || classes.length === 0) {
+    container.innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;">আজকের জন্য কোন ক্লাস পাওয়া যায়নি</td></tr>`;
+    return;
+  }
+
+  let tableHTML = '';
+  classes.forEach(cls => {
+    if (!cls) return;
+    const displayValue = sortValue === 'today' ? cls.time : cls.date;
+    tableHTML += `
+      <tr data-subject="${cls.subject}" data-timestamp="${cls.timestamp}">
+        <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
+        <td class="class-info bangla-font">${cls.title}</td>
+        <td class="bangla-font">${displayValue}</td>
+      </tr>
+    `;
+  });
+  container.innerHTML = tableHTML;
+
+  $all('#today-classes-body tr').forEach(row => {
+    row.addEventListener('click', () => {
+      const subject = row.getAttribute('data-subject');
+      highlightedClassTimestamp = row.getAttribute('data-timestamp');
+      showSubjectPage(subject, true);
+    });
+  });
+}
+
+function renderCards(rows, root) {
+  if (!rows || rows.length === 0) {
+    root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
+    return;
+  }
+
+  root.innerHTML = '';
+  rows.forEach(r => {
+    if (!r) return;
+
+    const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
+    let buttonText;
+    let isExpired = false;
+
+    if (specialFolders.includes(r.subject)) {
+      buttonText = "দেখুন";
+    } else if (r.subject === "মিশন") {
+      buttonText = "মিশন সম্পন্ন করুন";
+    } else if (r.subject === "ইক্সাম") {
+      buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
+      isExpired = isExamTimeExpired(r.timestamp);
+    } else {
+      buttonText = "ক্লাস দেখুন";
     }
 
-    function renderCards(rows, root) {
-      if (!rows || rows.length === 0) {
-        root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
-        return;
-      }
-
-      root.innerHTML = '';
-      rows.forEach(r => {
-        if (!r) return;
-
-        const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
-        let buttonText;
-        let isExpired = false;
-
-        if (specialFolders.includes(r.subject)) {
-          buttonText = "দেখুন";
-        } else if (r.subject === "মিশন") {
-          buttonText = "মিশন সম্পন্ন করুন";
-        } else if (r.subject === "ইক্সাম") {
-          buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
-          isExpired = isExamTimeExpired(r.timestamp);
-        } else {
-          buttonText = "ক্লাস দেখুন";
-        }
-
-        const card = document.createElement('div');
-        card.className = 'card fade-in';
-        card.setAttribute('data-timestamp', r.timestamp);
-        if (highlightedClassTimestamp === r.timestamp) {
-          card.classList.add('highlight');
-          setTimeout(() => {
-            card.classList.remove('highlight');
-            highlightedClassTimestamp = null;
-          }, 5000);
-        }
-        card.innerHTML = `
-          <span class="card-badge bangla-font">ক্লাস ${r.serial}</span>
-          <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
-          <div class="video-title bangla-font">${r.title}</div>
-          <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${r.date}</span></div>
-          ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
-          <a class="btn" target="_blank" rel="noopener" href="${r.link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
-        `;
-        root.appendChild(card);
-      });
+    const card = document.createElement('div');
+    card.className = 'card fade-in';
+    card.setAttribute('data-timestamp', r.timestamp);
+    if (highlightedClassTimestamp === r.timestamp) {
+      card.classList.add('highlight');
+      setTimeout(() => {
+        card.classList.remove('highlight');
+        highlightedClassTimestamp = null;
+      }, 5000);
     }
+    card.innerHTML = `
+      <span class="card-badge bangla-font">ক্লাস ${r.serial}</span>
+      <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
+      <div class="video-title bangla-font">${r.title}</div>
+      <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${r.date}</span></div>
+      ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
+      <a class="btn" target="_blank" rel="noopener" href="${r.link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
+    `;
+    root.appendChild(card);
+  });
+}
 
-    function filterTodayClasses(classes) {
-      const today = getTodayDate();
-      return classes.filter(cls => cls && cls.date === today);
-    }
+function filterTodayClasses(classes) {
+  const today = getTodayDate();
+  return classes.filter(cls => cls && cls.date === today);
+}
 
-    async function loadInitialData() {
-      if (!checkLoginExpiry()) {
-        logout();
-        return;
-      }
+async function loadInitialData() {
+  if (!checkLoginExpiry()) {
+    logout();
+    return;
+  }
 
-      const rows = await fetchData();
-      allClasses = normalizeRows(rows);
-      renderTodayClassesSummary(filterTodayClasses(allClasses));
+  const rows = await fetchData();
+  allClasses = normalizeRows(rows);
+  renderTodayClassesSummary(filterTodayClasses(allClasses));
 
-      showAddClassButton();
-    }
+  showAddClassButton();
+}
 
-    function showSubjectPage(subject, fromTable = false) {
+function showSubjectPage(subject, fromTable = false) {
   currentSubject = subject;
   mainPage.style.display = 'none';
   subjectPage.style.display = 'block';
@@ -1871,7 +1892,5 @@ document.addEventListener('DOMContentLoaded', () => {
     subjectPage.style.display = 'none';
   }
   initializeEventListeners();
-});
-</script>
-</body>
+});</body>
 </html>

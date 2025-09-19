@@ -1142,367 +1142,6 @@
       align-items: center;
       gap: 6px;
     }
-
-    /* New styles for form and submissions - integrated with existing variables and design */
-    .form-button, .submissions-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: none;
-      background: var(--gradient-secondary);
-      color: white;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 12px;
-      display: none; /* Initially hidden, shown based on role */
-    }
-
-    .form-button:hover, .submissions-button:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .form-button::before, .submissions-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: 0.5s;
-    }
-
-    .form-button:hover::before, .submissions-button:hover::before {
-      left: 100%;
-    }
-
-    .action-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(5px);
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 25px;
-      max-width: 600px;
-      width: 90%;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow-lg);
-      position: relative;
-      overflow: auto;
-      max-height: 80vh;
-    }
-
-    .modal-content::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--gradient-primary);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .modal-close:hover {
-      color: var(--danger);
-    }
-
-    .modal-intro {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .modal-intro h2 {
-      font-size: 1.4rem;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 10px;
-    }
-
-    .modal-intro p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .form-section {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .form-section label {
-      font-weight: bold;
-      font-size: 0.95rem;
-      color: var(--text);
-      text-align: left;
-    }
-
-    .form-section input,
-    .form-section select,
-    .form-section textarea {
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid var(--card-border);
-      background: var(--glass);
-      color: var(--text);
-      outline: none;
-      transition: var(--transition);
-      backdrop-filter: blur(10px);
-      font-size: 0.9rem;
-    }
-
-    .form-section input:focus,
-    .form-section select:focus,
-    .form-section textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-    }
-
-    .form-section textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-
-    .submit-button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      background: var(--gradient-primary);
-      color: white;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-    }
-
-    .submit-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
-    }
-
-    .success-message {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--secondary);
-      color: white;
-      padding: 20px 40px;
-      border-radius: 10px;
-      z-index: 2000;
-      font-size: 1rem;
-      box-shadow: var(--shadow-md);
-      text-align: center;
-      max-width: 80%;
-    }
-
-    .submissions-list {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .submission-item {
-      background: var(--glass);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow-sm);
-      position: relative;
-    }
-
-    .submission-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--gradient-secondary);
-    }
-
-    .submission-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .submission-name {
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text);
-    }
-
-    .submission-batch {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      background: var(--card-bg);
-      padding: 4px 10px;
-      border-radius: 15px;
-    }
-
-    .submission-time {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .submission-message {
-      font-size: 0.9rem;
-      color: var(--text);
-      margin-bottom: 15px;
-      line-height: 1.6;
-    }
-
-    .comment-section {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .comment-input {
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-      background: var(--glass);
-      color: var(--text);
-      outline: none;
-      transition: var(--transition);
-      font-size: 0.85rem;
-      resize: vertical;
-      min-height: 60px;
-    }
-
-    .comment-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-    }
-
-    .save-comment-btn {
-      align-self: flex-end;
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: none;
-      background: var(--gradient-secondary);
-      color: white;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
-    }
-
-    .save-comment-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(139, 92, 246, 0.4);
-    }
-
-    .comment-display {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-top: 10px;
-    }
-
-    .reply-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(5px);
-    }
-
-    .reply-content {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 25px;
-      max-width: 500px;
-      width: 90%;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow-lg);
-      position: relative;
-      text-align: center;
-    }
-
-    .reply-content::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--gradient-secondary);
-    }
-
-    .reply-message {
-      font-size: 1rem;
-      color: var(--text);
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-
-    .reply-comment {
-      font-size: 0.95rem;
-      color: var(--text);
-      font-style: italic;
-      background: var(--glass);
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid var(--card-border);
-    }
   </style>
 </head>
 <body>
@@ -1629,10 +1268,6 @@
         <a class="pill subject-link" href="#" data-name="অন্যান্য"><span><i class="fas fa-ellipsis-h"></i> <span class="bangla-font">অন্যান্য</span></span><span class="go bangla-font">খুলুন</span></a>
       </div>
     </main>
-    <div class="action-buttons">
-      <button class="form-button" id="form-button"><i class="fas fa-edit"></i> <span class="bangla-font">কমেন্ট করুন</span></button>
-      <button class="submissions-button" id="submissions-button"><i class="fas fa-list-alt"></i> <span class="bangla-font">সাবমিশন দেখুন</span></button>
-    </div>
     <div class="owner-wrap">
       <div class="owner-messages" aria-hidden="false">
         <span class="msg">crafted with care</span>
@@ -1668,10 +1303,6 @@
       <h2 id="subject-title" class="bangla-font"><i class="fas fa-book"></i> সাবজেক্ট</h2>
       <div id="classGrid" class="grid"></div>
     </main>
-    <div class="action-buttons">
-      <button class="form-button" id="form-button"><i class="fas fa-edit"></i> <span class="bangla-font">ফর্ম পূরণ করুন</span></button>
-      <button class="submissions-button" id="submissions-button"><i class="fas fa-list-alt"></i> <span class="bangla-font">সাবমিশন দেখুন</span></button>
-    </div>
     <div class="owner-wrap">
       <div class="owner-messages" aria-hidden="false">
         <span class="msg">crafted with care</span>
@@ -1705,831 +1336,555 @@
     </div>
   </div>
   <div id="notification" class="notification"></div>
-  <!-- Form Modal -->
-  <div class="modal" id="formModal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="hideForm()">×</button>
-      <div class="modal-intro">
-        <h2 class="bangla-font">আপনার মতামত আমাদের কাছে মূল্যবান</h2>
-        <p class="bangla-font">প্রিয় শিক্ষার্থী, আমাদের শিক্ষামূলক ওয়েবসাইট আপনাদের শিক্ষা ও জ্ঞানার্জনের পথকে আরও সহজ ও ফলপ্রসূ করতে প্রতিশ্রুতিবদ্ধ। আপনার মূল্যবান মতামত, পরামর্শ, বা অভিযোগ আমাদেরকে আরও উন্নত করতে সাহায্য করবে। নিচের ফর্মটি পূরণ করে আপনার অনুভূতি জানান!</p>
-      </div>
-      <div class="form-section">
-        <form id="myForm" onsubmit="submitForm(event)">
-          <label class="bangla-font" for="name">নাম</label>
-          <input type="text" name="name" id="name" placeholder="আপনার নাম" required class="bangla-font">
-          <label class="bangla-font" for="batch">ব্যাচ নাম</label>
-          <select name="batch" id="batch" required class="bangla-font">
-            <option value="" disabled selected class="bangla-font">ব্যাচ নির্বাচন করুন</option>
-            <option value="Alim-25" class="bangla-font">আলিম-২৫</option>
-            <option value="Dakhil-26" class="bangla-font">দাখিল-২৬</option>
-            <option value="Alim-26" class="bangla-font">আলিম-২৬</option>
-          </select>
-          <label class="bangla-font" for="message">মতামত/পরামর্শ/অভিযোগ</label>
-          <textarea name="message" id="message" placeholder="আপনার মতামত, পরামর্শ, বা অভিযোগ লিখুন" required class="bangla-font"></textarea>
-          <button type="submit" class="submit-button bangla-font">জমা দিন</button>
-        </form>
-      </div>
-    </div>
-  </div>
-  <!-- Submissions Modal -->
-  <div class="modal" id="submissionsModal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="hideSubmissions()">×</button>
-      <div class="modal-intro">
-        <h2 class="bangla-font">সাবমিশন তালিকা</h2>
-        <p class="bangla-font">এখানে সকল সাবমিশন দেখুন এবং কমেন্ট যোগ করুন।</p>
-      </div>
-      <div id="submissions-list" class="submissions-list">
-        <!-- Submissions will be loaded here dynamically -->
-      </div>
-    </div>
-  </div>
-  <!-- Reply Modal for Users -->
-  <div class="reply-modal" id="replyModal">
-    <div class="reply-content">
-      <button class="modal-close" onclick="closeReplyModal()">×</button>
-      <h2 class="bangla-font">অ্যাডমিনের উত্তর</h2>
-      <p class="reply-message bangla-font">আপনার মেসেজ: <br><span id="userMessage"></span></p>
-      <div class="reply-comment bangla-font" id="adminComment"></div>
-    </div>
-  </div>
-  <div class="success-message" id="successMessage">ফর্ম সফলভাবে জমা হয়েছে!</div>
   <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwZnb6Lr-_IN1FzgvhQ-em6NjaqVIWWpmEKHinchUbY4Bt8NhOssIx_dRJ4MiSFmfKJ4g/exec";
-  const FORM_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySirAx-sx4xjWAW5MF40pzFpLemF9BXgm9ft1Jv96Z-s-eMIuYijb6MnbWavMHj9sv0g/exec';
+    const API_URL = "https://script.google.com/macros/s/AKfycbwZnb6Lr-_IN1FzgvhQ-em6NjaqVIWWpmEKHinchUbY4Bt8NhOssIx_dRJ4MiSFmfKJ4g/exec";
 
-  function $(sel, root = document) { return root.querySelector(sel); }
-  function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
+    function $(sel, root = document) { return root.querySelector(sel); }
+    function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
-  let currentSubject = null;
-  let highlightedClassTimestamp = null;
-  const loginPage = $('#login-page');
-  const mainPage = $('#main-page');
-  const subjectPage = $('#subject-page');
-  const warningModal = $('#warning-modal');
-  let allClasses = [];
-  let groupedClassesCache = {};
+    let currentSubject = null;
+    let highlightedClassTimestamp = null;
+    const loginPage = $('#login-page');
+    const mainPage = $('#main-page');
+    const subjectPage = $('#subject-page');
+    const warningModal = $('#warning-modal');
+    let allClasses = [];
+    let groupedClassesCache = {};
 
-  const availableSubjects = [
-    "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
-    "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
-    "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
-    "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
-    "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
-    "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
-    "ইক্সাম", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"
-  ];
+    const availableSubjects = [
+      "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
+      "আকাইদ ও ফিকহ", "বাংলা প্রথম পত্র", "বাংলা দ্বিতীয় পত্র", "ইংরেজি প্রথম পত্র",
+      "ইংরেজি দ্বিতীয় পত্র", "গণিত", "ইসলামের ইতিহাস", "তথ্য ও যোগাযোগ প্রযুক্তি",
+      "পদার্থবিজ্ঞান", "রসায়ন", "উচ্চতর গণিত", "জীববিজ্ঞান",
+      "বাংলাদেশ ও বিশ্বপরিচয়", "কৃষি শিক্ষা",
+      "মানতিক", "গার্হস্থ্য বিজ্ঞান", "পৌরনীতি ও নাগরিকতা", "মিশন",
+      "ইক্সাম", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"
+    ];
 
-  const LOGIN_EXPIRY_KEY = 'dakhil26_login_expiry';
-  const IS_LOGGED_IN_KEY = 'dakhil26_is_logged_in';
-  const USER_ROLE_KEY = 'dakhil26_user_role';
-  const USER_NAME_KEY = 'dakhil26_user_name';
+    const LOGIN_EXPIRY_KEY = 'dakhil26_login_expiry';
+    const IS_LOGGED_IN_KEY = 'dakhil26_is_logged_in';
+    const USER_ROLE_KEY = 'dakhil26_user_role';
 
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function setLoginExpiry(role) {
-    const now = new Date();
-    const oneMonthFromNow = new Date(now.setMonth(now.getMonth() + 1));
-    localStorage.setItem(LOGIN_EXPIRY_KEY, oneMonthFromNow.getTime());
-    localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
-    localStorage.setItem(USER_ROLE_KEY, role);
-  }
-
-  function checkLoginExpiry() {
-    const expiryTime = localStorage.getItem(LOGIN_EXPIRY_KEY);
-    const isLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY);
-    
-    if (!expiryTime || !isLoggedIn || isLoggedIn !== 'true') {
-      return false;
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    
-    const now = new Date().getTime();
-    return now < parseInt(expiryTime);
-  }
 
-  function getUserRole() {
-    return localStorage.getItem(USER_ROLE_KEY) || 'user';
-  }
+    function setLoginExpiry(role) {
+      const now = new Date();
+      const oneMonthFromNow = new Date(now.setMonth(now.getMonth() + 1));
+      localStorage.setItem(LOGIN_EXPIRY_KEY, oneMonthFromNow.getTime());
+      localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
+      localStorage.setItem(USER_ROLE_KEY, role);
+    }
 
-  function logout() {
-    localStorage.removeItem(LOGIN_EXPIRY_KEY);
-    localStorage.removeItem(IS_LOGGED_IN_KEY);
-    localStorage.removeItem(USER_ROLE_KEY);
-    localStorage.removeItem(USER_NAME_KEY);
-    loginPage.style.display = 'flex';
-    mainPage.style.display = 'none';
-    subjectPage.style.display = 'none';
-  }
+    function checkLoginExpiry() {
+      const expiryTime = localStorage.getItem(LOGIN_EXPIRY_KEY);
+      const isLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY);
+      
+      if (!expiryTime || !isLoggedIn || isLoggedIn !== 'true') {
+        return false;
+      }
+      
+      const now = new Date().getTime();
+      return now < parseInt(expiryTime);
+    }
 
-  function showWarningModal() {
-    warningModal.classList.add('show');
-  }
+    function getUserRole() {
+      return localStorage.getItem(USER_ROLE_KEY) || 'user';
+    }
 
-  function closeWarningModal() {
-    warningModal.classList.remove('show');
-  }
+    function logout() {
+      localStorage.removeItem(LOGIN_EXPIRY_KEY);
+      localStorage.removeItem(IS_LOGGED_IN_KEY);
+      localStorage.removeItem(USER_ROLE_KEY);
+      loginPage.style.display = 'flex';
+      mainPage.style.display = 'none';
+      subjectPage.style.display = 'none';
+    }
 
-  function showNotification(message, isError = false, isWarning = false) {
-    const notification = $('#notification');
-    notification.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'}"></i> ${message}`;
-    notification.className = 'notification ' + (isError ? 'error' : isWarning ? 'warning' : 'success');
-    notification.classList.add('show');
+    function showWarningModal() {
+      warningModal.classList.add('show');
+    }
 
-    setTimeout(() => {
-      notification.classList.remove('show');
-    }, 3000);
-  }
+    function closeWarningModal() {
+      warningModal.classList.remove('show');
+    }
 
-  function checkPassword() {
-    const password = $('#password').value.trim();
-    const errorElement = $('#error-message');
-    
-    if (password === 'USERDAKHIL26') {
-      const userName = prompt('আপনার নাম লিখুন:');
-      if (!userName) return;
-      localStorage.setItem(USER_NAME_KEY, userName);
-      setLoginExpiry('user');
-      loginPage.style.display = 'none';
-      mainPage.style.display = 'block';
-      showWarningModal();
-      loadInitialData();
-      showFormButton();
-      checkForReplies();
-      scrollToTop();
-    } else if (password === 'OWNERDAKHIL26') {
-      setLoginExpiry('owner');
-      loginPage.style.display = 'none';
-      mainPage.style.display = 'block';
-      showWarningModal();
-      showAddClassButton();
-      showSubmissionsButton();
-      loadInitialData();
-      scrollToTop();
-    } else {
-      errorElement.style.display = 'block';
+    function showNotification(message, isError = false, isWarning = false) {
+      const notification = $('#notification');
+      notification.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'}"></i> ${message}`;
+      notification.className = 'notification ' + (isError ? 'error' : isWarning ? 'warning' : 'success');
+      notification.classList.add('show');
+
       setTimeout(() => {
-        errorElement.style.display = 'none';
+        notification.classList.remove('show');
       }, 3000);
     }
-  }
 
-  function showAddClassButton() {
-    const addClassBtn = $('#add-class-btn');
-    if (addClassBtn && getUserRole() === 'owner') {
-      addClassBtn.style.display = 'inline-flex';
-    }
-  }
-
-  function showFormButton() {
-    if (getUserRole() === 'user') {
-      $all('#form-button').forEach(btn => btn.style.display = 'inline-flex');
-    }
-  }
-
-  function showSubmissionsButton() {
-    if (getUserRole() === 'owner') {
-      $all('#submissions-button').forEach(btn => btn.style.display = 'inline-flex');
-    }
-  }
-
-  $('#password').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      checkPassword();
-    }
-  });
-
-  function getDateFromTimestamp(timestamp) {
-    if (!timestamp) return getTodayDate();
-
-    try {
-      const date = new Date(timestamp);
-      if (!isNaN(date)) {
-        return date.toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
-      }
-      return getTodayDate();
-    } catch (error) {
-      console.error("Timestamp parsing error:", error, timestamp);
-      return getTodayDate();
-    }
-  }
-
-  function getTimeFromTimestamp(timestamp) {
-    if (!timestamp) return '3:37 PM';
-
-    try {
-      const date = new Date(timestamp);
-      if (!isNaN(date)) {
-        return date.toLocaleTimeString('en-US', { timeZone: 'Asia/Dhaka', hour: 'numeric', minute: '2-digit', hour12: true });
-      }
-      return '3:37 PM';
-    } catch (error) {
-      console.error("Time parsing error:", error, timestamp);
-      return '3:37 PM';
-    }
-  }
-
-  function getTodayDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-  const banglaMonths = [
-    'জানুয়ারী', 'ফেব্রুয়ারী', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
-    'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
-  ];
-
-  function formatDateToBangla(dateStr) {
-    if (!dateStr) return '';
-
-    try {
-      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-        const [year, month, day] = dateStr.split('-');
-        return `${parseInt(day)} ${banglaMonths[parseInt(month) - 1]}, ${year}`;
-      }
-      return dateStr;
-    } catch (error) {
-      console.error("Date formatting error:", error, dateStr);
-      return dateStr;
-    }
-  }
-
-  function findBestMatchingSubject(subjectFromSheet) {
-    if (!subjectFromSheet) return null;
-
-    const cleanSubject = subjectFromSheet.toString().trim();
-    for (const availableSubject of availableSubjects) {
-      if (cleanSubject === availableSubject) {
-        return availableSubject;
-      }
-    }
-    return cleanSubject;
-  }
-
-  async function fetchData() {
-    try {
-      showNotification("ডেটা লোড হচ্ছে...", false);
-      const res = await fetch(API_URL, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-
-      const data = await res.json();
-      if (data && data.ok) {
-        showNotification("ডেটা সফলভাবে লোড হয়েছে!");
-        console.log("API Response:", data);
-        return data.rows || [];
+    function checkPassword() {
+      const password = $('#password').value.trim();
+      const errorElement = $('#error-message');
+      
+      if (password === 'USERDAKHIL26') {
+        setLoginExpiry('user');
+        loginPage.style.display = 'none';
+        mainPage.style.display = 'block';
+        showWarningModal();
+        loadInitialData();
+        scrollToTop();
+      } else if (password === 'OWNERDAKHIL26') {
+        setLoginExpiry('owner');
+        loginPage.style.display = 'none';
+        mainPage.style.display = 'block';
+        showWarningModal();
+        showAddClassButton();
+        loadInitialData();
+        scrollToTop();
       } else {
-        throw new Error(data.error || "ডেটা লোড করতে সমস্যা");
-      }
-    } catch (error) {
-      console.error("ডেটা লোড করতে সমস্যা:", error);
-      showNotification("ডেটা লোড করা যায়নি: " + error.message, true);
-      return [];
-    }
-  }
-
-  function normalizeRows(rows) {
-    try {
-      return rows.map(row => {
-        const timestamp = row.timestamp || '';
-        const subjectFromSheet = row.subject || 'Unknown Subject';
-        const link = row.link || '#';
-        const title = row.title || 'ক্লাস ভিডিও';
-        const date = getDateFromTimestamp(timestamp);
-        const time = getTimeFromTimestamp(timestamp);
-        const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
-        const serial = row.serial || 1;
-
-        return {
-          subject: matchedSubject,
-          originalSubject: subjectFromSheet,
-          link: link,
-          title: title,
-          date: date,
-          time: time,
-          serial: serial,
-          timestamp: timestamp
-        };
-      });
-    } catch (error) {
-      console.error("Rows normalization error:", error);
-      return [];
-    }
-  }
-
-  function isExamTimeExpired(timestamp) {
-    if (!timestamp) return false;
-    try {
-      const examTime = new Date(timestamp).getTime();
-      const now = new Date().getTime();
-      const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
-      return (now - examTime) > twentyFourHoursInMs;
-    } catch (error) {
-      console.error("Exam expiry check error:", error, timestamp);
-      return false;
-    }
-  }
-
-  function filterClassesByTimeRange(range) {
-    const now = new Date();
-    const today = getTodayDate();
-
-    if (range === 'today') {
-      return allClasses.filter(cls => cls && cls.date === today);
-    } else if (range === 'all') {
-      return allClasses;
-    }
-
-    const weekAgo = new Date(now.setDate(now.getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
-    const monthAgo = new Date(now.setMonth(now.getMonth() - 1)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
-
-    return allClasses.filter(cls => {
-      if (!cls || !cls.date) return false;
-      if (range === 'week') {
-        return cls.date >= weekAgo && cls.date <= today;
-      } else if (range === 'month') {
-        return cls.date >= monthAgo && cls.date <= today;
-      }
-      return true;
-    });
-  }
-
-  function groupClassesBySubject(classes) {
-    if (groupedClassesCache[JSON.stringify(classes)]) {
-      return groupedClassesCache[JSON.stringify(classes)];
-    }
-
-    const grouped = classes.reduce((acc, cls) => {
-      if (!cls || !cls.subject) return acc;
-      if (!acc[cls.subject]) {
-        acc[cls.subject] = [];
-      }
-      acc[cls.subject].push(cls);
-      return acc;
-    }, {});
-
-    Object.keys(grouped).forEach(subject => {
-      grouped[subject].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    });
-
-    groupedClassesCache[JSON.stringify(classes)] = grouped;
-    return grouped;
-  }
-
-  function renderTodayClassesSummary(classes) {
-    const container = $('#today-classes-body');
-    const sortValue = $('#sort-classes').value;
-
-    if (!classes || classes.length === 0) {
-      container.innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;">আজকের জন্য কোন ক্লাস পাওয়া যায়নি</td></tr>`;
-      return;
-    }
-
-    let tableHTML = '';
-    classes.forEach(cls => {
-      if (!cls) return;
-      const displayTime = sortValue === 'today' ? cls.time : formatDateToBangla(cls.date);
-      tableHTML += `
-        <tr data-subject="${cls.subject}" data-timestamp="${cls.timestamp}">
-          <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
-          <td class="class-info bangla-font">${cls.title}</td>
-          <td class="bangla-font">${displayTime}</td>
-        </tr>
-      `;
-    });
-    container.innerHTML = tableHTML;
-
-    $all('#today-classes-body tr').forEach(row => {
-      row.addEventListener('click', () => {
-        const subject = row.getAttribute('data-subject');
-        highlightedClassTimestamp = row.getAttribute('data-timestamp');
-        showSubjectPage(subject, true);
-      });
-    });
-  }
-
-  function renderCards(rows, root) {
-    if (!rows || rows.length === 0) {
-      root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
-      return;
-    }
-
-    root.innerHTML = '';
-    rows.forEach(r => {
-      if (!r) return;
-
-      const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
-      let buttonText;
-      let isExpired = false;
-
-      if (specialFolders.includes(r.subject)) {
-        buttonText = "দেখুন";
-      } else if (r.subject === "মিশন") {
-        buttonText = "মিশন সম্পন্ন করুন";
-      } else if (r.subject === "ইক্সাম") {
-        buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
-        isExpired = isExamTimeExpired(r.timestamp);
-      } else {
-        buttonText = "ক্লাস দেখুন";
-      }
-
-      const card = document.createElement('div');
-      card.className = 'card fade-in';
-      card.setAttribute('data-timestamp', r.timestamp);
-      if (highlightedClassTimestamp === r.timestamp) {
-        card.classList.add('highlight');
+        errorElement.style.display = 'block';
         setTimeout(() => {
-          card.classList.remove('highlight');
-          highlightedClassTimestamp = null;
-        }, 5000);
+          errorElement.style.display = 'none';
+        }, 3000);
       }
-      card.innerHTML = `
-        <span class="card-badge bangla-font">ক্লাস ${r.serial}</span>
-        <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
-        <div class="video-title bangla-font">${r.title}</div>
-        <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${formatDateToBangla(r.date)}</span></div>
-        ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
-        <a class="btn" target="_blank" rel="noopener" href="${r.link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
-      `;
-      root.appendChild(card);
-    });
-  }
-
-  function filterTodayClasses(classes) {
-    const today = getTodayDate();
-    return classes.filter(cls => cls && cls.date === today);
-  }
-
-  async function loadInitialData() {
-    if (!checkLoginExpiry()) {
-      logout();
-      return;
     }
 
-    const rows = await fetchData();
-    allClasses = normalizeRows(rows);
-    renderTodayClassesSummary(filterClassesByTimeRange($('#sort-classes').value));
+    function showAddClassButton() {
+      const addClassBtn = $('#add-class-btn');
+      if (addClassBtn && getUserRole() === 'owner') {
+        addClassBtn.style.display = 'inline-flex';
+      }
+    }
 
-    showAddClassButton();
-  }
+    $('#password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
 
-  function showSubjectPage(subject, fromTable = false) {
-    if (!subject) return;
+    function getDateFromTimestamp(timestamp) {
+      if (!timestamp) return getTodayDate();
 
-    currentSubject = subject;
-    mainPage.style.display = 'none';
-    subjectPage.style.display = 'block';
-    $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
+      try {
+        const date = new Date(timestamp);
+        if (!isNaN(date)) {
+          return date.toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+        }
+        return getTodayDate();
+      } catch (error) {
+        console.error("Timestamp parsing error:", error, timestamp);
+        return getTodayDate();
+      }
+    }
 
-    if (!fromTable) {
+    function getTimeFromTimestamp(timestamp) {
+      if (!timestamp) return '3:37 PM';
+
+      try {
+        const date = new Date(timestamp);
+        if (!isNaN(date)) {
+          return date.toLocaleTimeString('en-US', { timeZone: 'Asia/Dhaka', hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+        return '3:37 PM';
+      } catch (error) {
+        console.error("Time parsing error:", error, timestamp);
+        return '3:37 PM';
+      }
+    }
+
+    function getTodayDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    const banglaMonths = [
+      'জানুয়ারী', 'ফেব্রুয়ারী', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
+      'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
+    ];
+
+    function formatDateToBangla(dateStr) {
+      if (!dateStr) return '';
+
+      try {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+          const [year, month, day] = dateStr.split('-');
+          return `${parseInt(day)} ${banglaMonths[parseInt(month) - 1]}, ${year}`;
+        }
+        return dateStr;
+      } catch (error) {
+        console.error("Date formatting error:", error, dateStr);
+        return dateStr;
+      }
+    }
+
+    function findBestMatchingSubject(subjectFromSheet) {
+      if (!subjectFromSheet) return null;
+
+      const cleanSubject = subjectFromSheet.toString().trim();
+      for (const availableSubject of availableSubjects) {
+        if (cleanSubject === availableSubject) {
+          return availableSubject;
+        }
+      }
+      return cleanSubject;
+    }
+
+    async function fetchData() {
+      try {
+        showNotification("ডেটা লোড হচ্ছে...", false);
+        const res = await fetch(API_URL, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        if (data && data.ok) {
+          showNotification("ডেটা সফলভাবে লোড হয়েছে!");
+          console.log("API Response:", data);
+          return data.rows || [];
+        } else {
+          throw new Error(data.error || "ডেটা লোড করতে সমস্যা");
+        }
+      } catch (error) {
+        console.error("ডেটা লোড করতে সমস্যা:", error);
+        showNotification("ডেটা লোড করা যায়নি: " + error.message, true);
+        return [];
+      }
+    }
+
+    function normalizeRows(rows) {
+      try {
+        return rows.map(row => {
+          const timestamp = row.timestamp || '';
+          const subjectFromSheet = row.subject || 'Unknown Subject';
+          const link = row.link || '#';
+          const title = row.title || 'ক্লাস ভিডিও';
+          const date = getDateFromTimestamp(timestamp);
+          const time = getTimeFromTimestamp(timestamp);
+          const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
+          const serial = row.serial || 1;
+
+          return {
+            subject: matchedSubject,
+            originalSubject: subjectFromSheet,
+            link: link,
+            title: title,
+            date: date,
+            time: time,
+            serial: serial,
+            timestamp: timestamp
+          };
+        });
+      } catch (error) {
+        console.error("Rows normalization error:", error);
+        return [];
+      }
+    }
+
+    function isExamTimeExpired(timestamp) {
+      if (!timestamp) return false;
+      try {
+        const examTime = new Date(timestamp).getTime();
+        const now = new Date().getTime();
+        const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+        return (now - examTime) > twentyFourHoursInMs;
+      } catch (error) {
+        console.error("Exam expiry check error:", error, timestamp);
+        return false;
+      }
+    }
+
+    function filterClassesByTimeRange(range) {
+      const now = new Date();
+      const today = getTodayDate();
+
+      if (range === 'today') {
+        return allClasses.filter(cls => cls && cls.date === today);
+      } else if (range === 'all') {
+        return allClasses;
+      }
+
+      const weekAgo = new Date(now.setDate(now.getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+      const monthAgo = new Date(now.setMonth(now.getMonth() - 1)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+
+      return allClasses.filter(cls => {
+        if (!cls || !cls.date) return false;
+        if (range === 'week') {
+          return cls.date >= weekAgo && cls.date <= today;
+        } else if (range === 'month') {
+          return cls.date >= monthAgo && cls.date <= today;
+        }
+        return true;
+      });
+    }
+
+    function groupClassesBySubject(classes) {
+      if (groupedClassesCache[JSON.stringify(classes)]) {
+        return groupedClassesCache[JSON.stringify(classes)];
+      }
+
+      const grouped = classes.reduce((acc, cls) => {
+        if (!cls || !cls.subject) return acc;
+        if (!acc[cls.subject]) {
+          acc[cls.subject] = [];
+        }
+        acc[cls.subject].push(cls);
+        return acc;
+      }, {});
+
+      Object.keys(grouped).forEach(subject => {
+        grouped[subject].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      });
+
+      groupedClassesCache[JSON.stringify(classes)] = grouped;
+      return grouped;
+    }
+
+    function renderTodayClassesSummary(classes) {
+      const container = $('#today-classes-body');
+      const sortValue = $('#sort-classes').value;
+
+      if (!classes || classes.length === 0) {
+        container.innerHTML = `<tr><td colspan="3" class="bangla-font" style="text-align: center; padding: 20px;">আজকের জন্য কোন ক্লাস পাওয়া যায়নি</td></tr>`;
+        return;
+      }
+
+      let tableHTML = '';
+      classes.forEach(cls => {
+        if (!cls) return;
+        const displayTime = sortValue === 'today' ? cls.time : formatDateToBangla(cls.date);
+        tableHTML += `
+          <tr data-subject="${cls.subject}" data-timestamp="${cls.timestamp}">
+            <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
+            <td class="class-info bangla-font">${cls.title}</td>
+            <td class="bangla-font">${displayTime}</td>
+          </tr>
+        `;
+      });
+      container.innerHTML = tableHTML;
+
+      $all('#today-classes-body tr').forEach(row => {
+        row.addEventListener('click', () => {
+          const subject = row.getAttribute('data-subject');
+          highlightedClassTimestamp = row.getAttribute('data-timestamp');
+          showSubjectPage(subject, true);
+        });
+      });
+    }
+
+    function renderCards(rows, root) {
+      if (!rows || rows.length === 0) {
+        root.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="bangla-font">কোন ক্লাস পাওয়া যায়নি</p></div>';
+        return;
+      }
+
+      root.innerHTML = '';
+      rows.forEach(r => {
+        if (!r) return;
+
+        const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
+        let buttonText;
+        let isExpired = false;
+
+        if (specialFolders.includes(r.subject)) {
+          buttonText = "দেখুন";
+        } else if (r.subject === "মিশন") {
+          buttonText = "মিশন সম্পন্ন করুন";
+        } else if (r.subject === "ইক্সাম") {
+          buttonText = "পরীক্ষায় অংশগ্রহণ করুন";
+          isExpired = isExamTimeExpired(r.timestamp);
+        } else {
+          buttonText = "ক্লাস দেখুন";
+        }
+
+        const card = document.createElement('div');
+        card.className = 'card fade-in';
+        card.setAttribute('data-timestamp', r.timestamp);
+        if (highlightedClassTimestamp === r.timestamp) {
+          card.classList.add('highlight');
+          setTimeout(() => {
+            card.classList.remove('highlight');
+            highlightedClassTimestamp = null;
+          }, 5000);
+        }
+        card.innerHTML = `
+          <span class="card-badge bangla-font">ক্লাস ${r.serial}</span>
+          <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
+          <div class="video-title bangla-font">${r.title}</div>
+          <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${formatDateToBangla(r.date)}</span></div>
+          ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
+          <a class="btn" target="_blank" rel="noopener" href="${r.link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
+        `;
+        root.appendChild(card);
+      });
+    }
+
+    function filterTodayClasses(classes) {
+      const today = getTodayDate();
+      return classes.filter(cls => cls && cls.date === today);
+    }
+
+    async function loadInitialData() {
+      if (!checkLoginExpiry()) {
+        logout();
+        return;
+      }
+
+      const rows = await fetchData();
+      allClasses = normalizeRows(rows);
+      renderTodayClassesSummary(filterTodayClasses(allClasses));
+
+      showAddClassButton();
+    }
+
+    function showSubjectPage(subject, fromTable = false) {
+      if (!subject) return;
+
+      currentSubject = subject;
+      mainPage.style.display = 'none';
+      subjectPage.style.display = 'block';
+      $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
+
+      if (!fromTable) {
+        scrollToTop();
+      }
+
+      const groupedClasses = groupClassesBySubject(allClasses);
+      const classes = groupedClasses[subject] || [];
+      // Sort classes newest to oldest for default display (newest at top)
+      const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      // Assign serial numbers: oldest class (bottom) gets #1, newest (top) gets highest
+      sortedClasses.forEach((cls, index, arr) => {
+        cls.serial = arr.length - index; // Oldest class #1, increments upwards
+      });
+
+      // Apply sort option for display order
+      const sortOrder = $('#sort').value;
+      const displayClasses = sortOrder === 'asc' 
+        ? sortedClasses.slice().reverse() // Oldest first (oldest at top)
+        : sortedClasses; // Newest first (newest at top)
+
+      renderCards(displayClasses, $('#classGrid'));
+
+      if (fromTable && highlightedClassTimestamp) {
+        const card = $(`#classGrid .card[data-timestamp="${highlightedClassTimestamp}"]`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+          // Highlight removes after 5 seconds
+          setTimeout(() => {
+            card.classList.remove('highlight');
+            highlightedClassTimestamp = null;
+          }, 5000);
+        }
+      }
+    }
+
+    $('#search').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      const groupedClasses = groupClassesBySubject(allClasses);
+      const classes = groupedClasses[currentSubject] || [];
+      const filteredClasses = classes.filter(cls => 
+        cls.title.toLowerCase().includes(searchTerm) || 
+        cls.subject.toLowerCase().includes(searchTerm)
+      );
+      // Sort filtered classes newest to oldest
+      const sortedFilteredClasses = [...filteredClasses].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      // Assign serial numbers: oldest class #1
+      sortedFilteredClasses.forEach((cls, index, arr) => {
+        cls.serial = arr.length - index;
+      });
+
+      // Apply sort option for display order
+      const sortOrder = $('#sort').value;
+      const displayClasses = sortOrder === 'asc' 
+        ? sortedFilteredClasses.slice().reverse() 
+        : sortedFilteredClasses;
+
+      renderCards(displayClasses, $('#classGrid'));
+    });
+
+    $('#sort').addEventListener('change', (e) => {
+      const sortOrder = e.target.value;
+      const groupedClasses = groupClassesBySubject(allClasses);
+      const classes = groupedClasses[currentSubject] || [];
+      
+      // Sort classes newest to oldest and assign serial numbers
+      const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      sortedClasses.forEach((cls, index, arr) => {
+        cls.serial = arr.length - index; // Oldest class #1
+      });
+      
+      // Apply sort option for display order
+      const displayClasses = sortOrder === 'asc' 
+        ? sortedClasses.slice().reverse() // Oldest first
+        : sortedClasses; // Newest first
+      
+      renderCards(displayClasses, $('#classGrid'));
+    });
+
+    $('#sort-classes').addEventListener('change', () => {
+      const range = $('#sort-classes').value;
+      const filteredClasses = filterClassesByTimeRange(range);
+      renderTodayClassesSummary(filteredClasses);
+    });
+
+    $('#search-subjects').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      const subjectLinks = $all('.subject-link');
+      subjectLinks.forEach(link => {
+        const subjectName = link.getAttribute('data-name').toLowerCase();
+        link.style.display = subjectName.includes(searchTerm) ? '' : 'none';
+      });
+    });
+
+    $('#refresh-data-btn').addEventListener('click', async () => {
+      const rows = await fetchData();
+      allClasses = normalizeRows(rows);
+      renderTodayClassesSummary(filterClassesByTimeRange($('#sort-classes').value));
+      if (currentSubject) {
+        showSubjectPage(currentSubject);
+      }
+      showNotification("ডেটা রিফ্রেশ করা হয়েছে!");
+    });
+
+    $all('.subject-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const subject = link.getAttribute('data-name');
+        showSubjectPage(subject);
+      });
+    });
+
+    $('.back-button').addEventListener('click', (e) => {
+      e.preventDefault();
+      showMainPage();
+    });
+
+    function showMainPage() {
+      subjectPage.style.display = 'none';
+      mainPage.style.display = 'block';
       scrollToTop();
     }
 
-    const groupedClasses = groupClassesBySubject(allClasses);
-    const classes = groupedClasses[subject] || [];
-    // Sort classes newest to oldest for default display (newest at top)
-    const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    // Assign serial numbers: oldest class (bottom) gets #1, newest (top) gets highest
-    sortedClasses.forEach((cls, index, arr) => {
-      cls.serial = arr.length - index; // Oldest class #1, increments upwards
-    });
-
-    // Apply sort option for display order
-    const sortOrder = $('#sort').value;
-    const displayClasses = sortOrder === 'asc' 
-      ? sortedClasses.slice().reverse() // Oldest first (oldest at top)
-      : sortedClasses; // Newest first (newest at top)
-
-    renderCards(displayClasses, $('#classGrid'));
-
-    if (fromTable && highlightedClassTimestamp) {
-      const card = $(`#classGrid .card[data-timestamp="${highlightedClassTimestamp}"]`);
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-        // Highlight removes after 5 seconds
-        setTimeout(() => {
-          card.classList.remove('highlight');
-          highlightedClassTimestamp = null;
-        }, 5000);
-      }
+    // Initialize the page
+    if (checkLoginExpiry()) {
+      loginPage.style.display = 'none';
+      mainPage.style.display = 'block';
+      showAddClassButton();
+      loadInitialData();
+    } else {
+      loginPage.style.display = 'flex';
+      mainPage.style.display = 'none';
+      subjectPage.style.display = 'none';
     }
-  }
-
-  $('#search').addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase().trim();
-    const groupedClasses = groupClassesBySubject(allClasses);
-    const classes = groupedClasses[currentSubject] || [];
-    const filteredClasses = classes.filter(cls => 
-      cls.title.toLowerCase().includes(searchTerm) || 
-      cls.subject.toLowerCase().includes(searchTerm)
-    );
-    // Sort filtered classes newest to oldest
-    const sortedFilteredClasses = [...filteredClasses].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    // Assign serial numbers: oldest class #1
-    sortedFilteredClasses.forEach((cls, index, arr) => {
-      cls.serial = arr.length - index;
-    });
-
-    // Apply sort option for display order
-    const sortOrder = $('#sort').value;
-    const displayClasses = sortOrder === 'asc' 
-      ? sortedFilteredClasses.slice().reverse() 
-      : sortedFilteredClasses;
-
-    renderCards(displayClasses, $('#classGrid'));
-  });
-
-  $('#sort').addEventListener('change', (e) => {
-    const sortOrder = e.target.value;
-    const groupedClasses = groupClassesBySubject(allClasses);
-    const classes = groupedClasses[currentSubject] || [];
-    
-    // Sort classes newest to oldest and assign serial numbers
-    const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    sortedClasses.forEach((cls, index, arr) => {
-      cls.serial = arr.length - index; // Oldest class #1
-    });
-    
-    // Apply sort option for display order
-    const displayClasses = sortOrder === 'asc' 
-      ? sortedClasses.slice().reverse() // Oldest first
-      : sortedClasses; // Newest first
-    
-    renderCards(displayClasses, $('#classGrid'));
-  });
-
-  $('#sort-classes').addEventListener('change', () => {
-    const range = $('#sort-classes').value;
-    const filteredClasses = filterClassesByTimeRange(range);
-    renderTodayClassesSummary(filteredClasses);
-  });
-
-  $('#search-subjects').addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase().trim();
-    const subjectLinks = $all('.subject-link');
-    subjectLinks.forEach(link => {
-      const subjectName = link.getAttribute('data-name').toLowerCase();
-      link.style.display = subjectName.includes(searchTerm) ? '' : 'none';
-    });
-  });
-
-  $('#refresh-data-btn').addEventListener('click', async () => {
-    const rows = await fetchData();
-    allClasses = normalizeRows(rows);
-    renderTodayClassesSummary(filterClassesByTimeRange($('#sort-classes').value));
-    if (currentSubject) {
-      showSubjectPage(currentSubject);
-    }
-    showNotification("ডেটা রিফ্রেশ করা হয়েছে!");
-  });
-
-  $all('.subject-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const subject = link.getAttribute('data-name');
-      showSubjectPage(subject);
-    });
-  });
-
-  $('.back-button').addEventListener('click', (e) => {
-    e.preventDefault();
-    showMainPage();
-  });
-
-  function showMainPage() {
-    subjectPage.style.display = 'none';
-    mainPage.style.display = 'block';
-    scrollToTop();
-  }
-
-  // Initialize the page
-  if (checkLoginExpiry()) {
-    loginPage.style.display = 'none';
-    mainPage.style.display = 'block';
-    showAddClassButton();
-    showFormButton();
-    showSubmissionsButton();
-    loadInitialData();
-    if (getUserRole() === 'user') {
-      checkForReplies();
-    }
-  } else {
-    loginPage.style.display = 'flex';
-    mainPage.style.display = 'none';
-    subjectPage.style.display = 'none';
-  }
-
-  /* Form and Submissions Functionality */
-  $all('#form-button').forEach(btn => {
-    btn.addEventListener('click', showForm);
-  });
-
-  $all('#submissions-button').forEach(btn => {
-    btn.addEventListener('click', showSubmissions);
-  });
-
-  function showForm() {
-    $('#formModal').style.display = 'flex';
-    $('#myForm').reset();
-  }
-
-  function hideForm() {
-    $('#formModal').style.display = 'none';
-  }
-
-  function submitForm(event) {
-    event.preventDefault();
-    const form = $('#myForm');
-    const formData = {
-      name: form.name.value,
-      batch: form.batch.value,
-      message: form.message.value
-    };
-
-    fetch(FORM_SCRIPT_URL + '?action=save', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('নেটওয়ার্ক ত্রুটি');
-      return response.json();
-    })
-    .then(data => {
-      if (data.result === 'success') {
-        form.reset();
-        hideForm();
-        showSuccessMessage();
-        showNotification('সাবমিশন সফল!', false);
-        if (getUserRole() === 'owner') {
-          loadSubmissions(); // Refresh submissions for owner
-        }
-      } else {
-        showNotification('জমা দিতে সমস্যা: ' + data.error, true);
-      }
-    })
-    .catch(error => {
-      showNotification('ত্রুটি: ' + error.message, true);
-    });
-  }
-
-  function showSuccessMessage() {
-    const successMessage = $('#successMessage');
-    successMessage.style.display = 'block';
-    setTimeout(() => {
-      successMessage.style.display = 'none';
-    }, 3000);
-  }
-
-  function showSubmissions() {
-    $('#submissionsModal').style.display = 'flex';
-    loadSubmissions();
-  }
-
-  function hideSubmissions() {
-    $('#submissionsModal').style.display = 'none';
-  }
-
-  async function loadSubmissions() {
-    const submissionsList = $('#submissions-list');
-    submissionsList.innerHTML = '<div class="empty-state"><div class="loading"></div><p class="bangla-font">লোড হচ্ছে...</p></div>';
-
-    try {
-      const res = await fetch(FORM_SCRIPT_URL + '?action=get', {
-        method: 'GET'
-      });
-      if (!res.ok) throw new Error('নেটওয়ার্ক ত্রুটি');
-      const data = await res.json();
-      if (data.result === 'success' && data.submissions.length > 0) {
-        renderSubmissions(data.submissions);
-        checkForReplies(data.submissions);
-      } else {
-        submissionsList.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg><p class="bangla-font">কোনো সাবমিশন পাওয়া যায়নি।</p></div>';
-      }
-    } catch (error) {
-      submissionsList.innerHTML = '<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg><p class="bangla-font">ত্রুটি: ' + error.message + '</p></div>';
-    }
-  }
-
-  function renderSubmissions(submissions) {
-    const container = $('#submissions-list');
-    container.innerHTML = submissions.map((sub, index) => `
-      <div class="submission-item">
-        <div class="submission-header">
-          <span class="submission-name bangla-font">${sub.name}</span>
-          <span class="submission-batch bangla-font">${sub.batch}</span>
-        </div>
-        <div class="submission-time bangla-font">${new Date(sub.timestamp).toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}</div>
-        <div class="submission-message bangla-font">${sub.message}</div>
-        <div class="comment-section">
-          <textarea class="comment-input bangla-font" placeholder="কমেন্ট লিখুন..." ${sub.comment ? 'disabled' : ''}>${sub.comment || ''}</textarea>
-          <button class="save-comment-btn bangla-font" onclick="saveComment(${index}, '${sub.id}')" ${sub.comment ? 'disabled' : ''}>সেভ করুন</button>
-          <div class="comment-display bangla-font" ${sub.comment ? '' : 'style="display: none;"'}>কমেন্ট: ${sub.comment}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function saveComment(index, id) {
-    const commentInput = $all('.comment-input')[index];
-    const comment = commentInput.value.trim();
-    if (!comment) {
-      showNotification('কমেন্ট খালি হতে পারে না!', true);
-      return;
-    }
-
-    fetch(FORM_SCRIPT_URL + '?action=update', {
-      method: 'POST',
-      body: JSON.stringify({ id, comment }),
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('নেটওয়ার্ক ত্রুটি');
-      return response.json();
-    })
-    .then(data => {
-      if (data.result === 'success') {
-        showNotification('কমেন্ট সফলভাবে সেভ হয়েছে!', false);
-        loadSubmissions(); // Reload to update display
-      } else {
-        showNotification('কমেন্ট সেভ করতে সমস্যা: ' + data.error, true);
-      }
-    })
-    .catch(error => {
-      showNotification('ত্রুটি: ' + error.message, true);
-    });
-  }
-
-  async function checkForReplies(submissions = null) {
-    const userName = localStorage.getItem(USER_NAME_KEY);
-    if (!userName || getUserRole() !== 'user') return;
-
-    try {
-      const res = submissions ? Promise.resolve({ ok: true, json: () => Promise.resolve({ result: 'success', submissions }) }) : await fetch(FORM_SCRIPT_URL + '?action=get', { method: 'GET' });
-      const data = await res.json();
-      if (data.result === 'success') {
-        const userSubmissions = data.submissions.filter(sub => sub.name.toLowerCase() === userName.toLowerCase() && sub.comment && sub.comment.trim() !== '');
-        if (userSubmissions.length > 0) {
-          const seenReplies = JSON.parse(localStorage.getItem('seen_replies') || '[]');
-          userSubmissions.forEach(sub => {
-            if (!seenReplies.includes(sub.id)) {
-              showReplyModal(sub.message, sub.comment, sub.id);
-            }
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Replies load error:', error);
-    }
-  }
-
-  function showReplyModal(message, comment, id) {
-    $('#userMessage').textContent = message;
-    $('#adminComment').textContent = comment;
-    $('#replyModal').style.display = 'flex';
-    // Mark as seen when closed
-    const closeBtn = $('#replyModal .modal-close');
-    closeBtn.onclick = () => {
-      closeReplyModal();
-      markReplySeen(id);
-    };
-  }
-
-  function closeReplyModal() {
-    $('#replyModal').style.display = 'none';
-  }
-
-  function markReplySeen(id) {
-    const seenReplies = JSON.parse(localStorage.getItem('seen_replies') || '[]');
-    if (!seenReplies.includes(id)) {
-      seenReplies.push(id);
-      localStorage.setItem('seen_replies', JSON.stringify(seenReplies));
-    }
-  }
-
-  // Close modals on outside click
-  window.addEventListener('click', (event) => {
-    if (event.target === $('#formModal')) {
-      hideForm();
-    }
-    if (event.target === $('#submissionsModal')) {
-      hideSubmissions();
-    }
-    if (event.target === $('#replyModal')) {
-      closeReplyModal();
-    }
-  });
   </script>
 </body>
 </html>

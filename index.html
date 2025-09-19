@@ -1337,7 +1337,7 @@
   </div>
   <div id="notification" class="notification"></div>
   <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwZnb6Lr-_IN1FzgvhQ-em6NjaqVIWWpmEKHinchUbY4Bt8NhOssIx_dRJ4MiSFmfKJ4g/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwZnb6Lr-_IN1FzgvhQ-em6NjaqVIWWpmEKHinchUbY4Bt8NhOssIx_dRJ4MiSFmfKJ4g/exec";
 
 function $(sel, root = document) { return root.querySelector(sel); }
 function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
@@ -1579,7 +1579,6 @@ function normalizeRows(rows) {
     // প্রতিটি সাবজেক্টের ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (পুরানো থেকে নতুন)
     const normalizedRows = [];
     Object.keys(groupedBySubject).forEach(subject => {
-      // ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (পুরানো থেকে নতুন)
       const sortedClasses = groupedBySubject[subject].sort((a, b) => {
         return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
       });
@@ -1667,9 +1666,9 @@ function groupClassesBySubject(classes) {
     return acc;
   }, {});
 
-  // প্রতিটি সাবজেক্টের ক্লাসগুলোকে সিরিয়াল নাম্বার অনুযায়ী সাজানো (নতুনতম উপরে, সর্বোচ্চ সিরিয়াল)
+  // প্রতিটি সাবজেক্টের ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (নতুন থেকে পুরানো)
   Object.keys(grouped).forEach(subject => {
-    grouped[subject].sort((a, b) => b.serial - a.serial);
+    grouped[subject].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   });
 
   groupedClassesCache[JSON.stringify(classes)] = grouped;

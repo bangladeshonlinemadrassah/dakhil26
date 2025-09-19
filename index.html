@@ -1467,7 +1467,10 @@
       try {
         const date = new Date(timestamp);
         if (!isNaN(date)) {
-          return date.toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
         }
         return getTodayDate();
       } catch (error) {
@@ -1477,17 +1480,22 @@
     }
 
     function getTimeFromTimestamp(timestamp) {
-      if (!timestamp) return '3:37 PM';
+      if (!timestamp) return '12:00 AM';
 
       try {
         const date = new Date(timestamp);
         if (!isNaN(date)) {
-          return date.toLocaleTimeString('en-US', { timeZone: 'Asia/Dhaka', hour: 'numeric', minute: '2-digit', hour12: true });
+          return date.toLocaleTimeString('en-US', { 
+            timeZone: 'Asia/Dhaka', 
+            hour: 'numeric', 
+            minute: '2-digit', 
+            hour12: true 
+          });
         }
-        return '3:37 PM';
+        return '12:00 AM';
       } catch (error) {
         console.error("Time parsing error:", error, timestamp);
-        return '3:37 PM';
+        return '12:00 AM';
       }
     }
 
@@ -1496,23 +1504,18 @@
       const year = today.getFullYear();
       const month = String(today.getMonth() + 1).padStart(2, '0');
       const day = String(today.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
+      return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
     }
-
-    const banglaMonths = [
-      'জানুয়ারী', 'ফেব্রুয়ারী', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
-      'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
-    ];
 
     function formatDateToBangla(dateStr) {
       if (!dateStr) return '';
 
       try {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-          const [year, month, day] = dateStr.split('-');
-          return `${parseInt(day)} ${banglaMonths[parseInt(month) - 1]}, ${year}`;
+        if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+          return dateStr; // ইতিমধ্যে DD-MM-YYYY ফরম্যাটে থাকলে রিটার্ন
         }
-        return dateStr;
+        const [year, month, day] = dateStr.split('-');
+        return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
       } catch (error) {
         console.error("Date formatting error:", error, dateStr);
         return dateStr;
@@ -1604,7 +1607,7 @@
 
     function filterClassesByTimeRange(range) {
       const now = new Date();
-      const today = getTodayDate();
+      const today = getTodayDate(); // DD-MM-YYYY ফরম্যাটে আজকের তারিখ
 
       if (range === 'today') {
         return allClasses.filter(cls => cls && cls.date === today);
@@ -1612,15 +1615,18 @@
         return allClasses;
       }
 
-      const weekAgo = new Date(now.setDate(now.getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
-      const monthAgo = new Date(now.setMonth(now.getMonth() - 1)).toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+      const weekAgo = new Date(now.setDate(now.getDate() - 7));
+      const monthAgo = new Date(now.setMonth(now.getMonth() - 1));
 
       return allClasses.filter(cls => {
         if (!cls || !cls.date) return false;
+        const classDateParts = cls.date.split('-'); // DD-MM-YYYY ফরম্যাট
+        const classDate = new Date(`${classDateParts[2]}-${classDateParts[1]}-${classDateParts[0]}`);
+        
         if (range === 'week') {
-          return cls.date >= weekAgo && cls.date <= today;
+          return classDate >= weekAgo && classDate <= new Date();
         } else if (range === 'month') {
-          return cls.date >= monthAgo && cls.date <= today;
+          return classDate >= monthAgo && classDate <= new Date();
         }
         return true;
       });
@@ -1660,12 +1666,12 @@
       let tableHTML = '';
       classes.forEach(cls => {
         if (!cls) return;
-        const displayTime = sortValue === 'today' ? cls.time : formatDateToBangla(cls.date);
+        const displayValue = sortValue === 'today' ? cls.time : cls.date;
         tableHTML += `
           <tr data-subject="${cls.subject}" data-timestamp="${cls.timestamp}">
             <td><span class="subject-badge bangla-font">${cls.subject}</span></td>
             <td class="class-info bangla-font">${cls.title}</td>
-            <td class="bangla-font">${displayTime}</td>
+            <td class="bangla-font">${displayValue}</td>
           </tr>
         `;
       });
@@ -1719,7 +1725,7 @@
           <span class="card-badge bangla-font">ক্লাস ${r.serial}</span>
           <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
           <div class="video-title bangla-font">${r.title}</div>
-          <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${formatDateToBangla(r.date)}</span></div>
+          <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${r.date}</span></div>
           ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
           <a class="btn" target="_blank" rel="noopener" href="${r.link}"><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
         `;
@@ -1746,145 +1752,126 @@
     }
 
     function showSubjectPage(subject, fromTable = false) {
-      if (!subject) return;
+  currentSubject = subject;
+  mainPage.style.display = 'none';
+  subjectPage.style.display = 'block';
+  $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
+  scrollToTop();
 
-      currentSubject = subject;
-      mainPage.style.display = 'none';
-      subjectPage.style.display = 'block';
-      $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
+  const classes = filterClassesByTimeRange('all');
+  const groupedClasses = groupClassesBySubject(classes);
+  const subjectClasses = groupedClasses[subject] || [];
 
-      if (!fromTable) {
-        scrollToTop();
-      }
+  const root = $('#classGrid');
+  renderCards(subjectClasses, root);
 
-      const groupedClasses = groupClassesBySubject(allClasses);
-      const classes = groupedClasses[subject] || [];
-      // Sort classes newest to oldest for default display (newest at top)
-      const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      // Assign serial numbers: oldest class (bottom) gets #1, newest (top) gets highest
-      sortedClasses.forEach((cls, index, arr) => {
-        cls.serial = arr.length - index; // Oldest class #1, increments upwards
-      });
-
-      // Apply sort option for display order
-      const sortOrder = $('#sort').value;
-      const displayClasses = sortOrder === 'asc' 
-        ? sortedClasses.slice().reverse() // Oldest first (oldest at top)
-        : sortedClasses; // Newest first (newest at top)
-
-      renderCards(displayClasses, $('#classGrid'));
-
-      if (fromTable && highlightedClassTimestamp) {
-        const card = $(`#classGrid .card[data-timestamp="${highlightedClassTimestamp}"]`);
-        if (card) {
-          card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-          // Highlight removes after 5 seconds
-          setTimeout(() => {
-            card.classList.remove('highlight');
-            highlightedClassTimestamp = null;
-          }, 5000);
-        }
-      }
+  if (fromTable) {
+    const highlightedCard = $all('#classGrid .card').find(card => card.getAttribute('data-timestamp') === highlightedClassTimestamp);
+    if (highlightedCard) {
+      highlightedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  }
 
-    $('#search').addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase().trim();
-      const groupedClasses = groupClassesBySubject(allClasses);
-      const classes = groupedClasses[currentSubject] || [];
-      const filteredClasses = classes.filter(cls => 
-        cls.title.toLowerCase().includes(searchTerm) || 
-        cls.subject.toLowerCase().includes(searchTerm)
-      );
-      // Sort filtered classes newest to oldest
-      const sortedFilteredClasses = [...filteredClasses].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      // Assign serial numbers: oldest class #1
-      sortedFilteredClasses.forEach((cls, index, arr) => {
-        cls.serial = arr.length - index;
-      });
+  $('#search').value = '';
+}
 
-      // Apply sort option for display order
-      const sortOrder = $('#sort').value;
-      const displayClasses = sortOrder === 'asc' 
-        ? sortedFilteredClasses.slice().reverse() 
-        : sortedFilteredClasses;
+function initializeEventListeners() {
+  $('#sort-classes').addEventListener('change', () => {
+    const range = $('#sort-classes').value;
+    const filteredClasses = filterClassesByTimeRange(range);
+    renderTodayClassesSummary(filteredClasses);
+  });
 
-      renderCards(displayClasses, $('#classGrid'));
+  $('#search-subjects').addEventListener('input', () => {
+    const searchTerm = $('#search-subjects').value.trim().toLowerCase();
+    const pills = $all('.subject-link');
+    pills.forEach(pill => {
+      const subjectName = pill.getAttribute('data-name').toLowerCase();
+      pill.style.display = subjectName.includes(searchTerm) ? 'flex' : 'none';
     });
+  });
 
-    $('#sort').addEventListener('change', (e) => {
-      const sortOrder = e.target.value;
-      const groupedClasses = groupClassesBySubject(allClasses);
-      const classes = groupedClasses[currentSubject] || [];
-      
-      // Sort classes newest to oldest and assign serial numbers
-      const sortedClasses = [...classes].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      sortedClasses.forEach((cls, index, arr) => {
-        cls.serial = arr.length - index; // Oldest class #1
-      });
-      
-      // Apply sort option for display order
-      const displayClasses = sortOrder === 'asc' 
-        ? sortedClasses.slice().reverse() // Oldest first
-        : sortedClasses; // Newest first
-      
-      renderCards(displayClasses, $('#classGrid'));
-    });
-
-    $('#sort-classes').addEventListener('change', () => {
-      const range = $('#sort-classes').value;
-      const filteredClasses = filterClassesByTimeRange(range);
-      renderTodayClassesSummary(filteredClasses);
-    });
-
-    $('#search-subjects').addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase().trim();
-      const subjectLinks = $all('.subject-link');
-      subjectLinks.forEach(link => {
-        const subjectName = link.getAttribute('data-name').toLowerCase();
-        link.style.display = subjectName.includes(searchTerm) ? '' : 'none';
-      });
-    });
-
-    $('#refresh-data-btn').addEventListener('click', async () => {
-      const rows = await fetchData();
-      allClasses = normalizeRows(rows);
-      renderTodayClassesSummary(filterClassesByTimeRange($('#sort-classes').value));
-      if (currentSubject) {
-        showSubjectPage(currentSubject);
-      }
-      showNotification("ডেটা রিফ্রেশ করা হয়েছে!");
-    });
-
-    $all('.subject-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const subject = link.getAttribute('data-name');
-        showSubjectPage(subject);
-      });
-    });
-
-    $('.back-button').addEventListener('click', (e) => {
+  $all('.subject-link').forEach(link => {
+    link.addEventListener('click', e => {
       e.preventDefault();
-      showMainPage();
+      const subject = link.getAttribute('data-name');
+      showSubjectPage(subject);
     });
+  });
 
-    function showMainPage() {
-      subjectPage.style.display = 'none';
-      mainPage.style.display = 'block';
-      scrollToTop();
-    }
-
-    // Initialize the page
-    if (checkLoginExpiry()) {
-      loginPage.style.display = 'none';
-      mainPage.style.display = 'block';
-      showAddClassButton();
-      loadInitialData();
+  $('#search').addEventListener('input', () => {
+    const searchTerm = $('#search').value.trim().toLowerCase();
+    const classes = filterClassesByTimeRange('all');
+    const groupedClasses = groupClassesBySubject(classes);
+    const subjectClasses = groupedClasses[currentSubject] || [];
+    const filteredClasses = subjectClasses.filter(cls => cls.title.toLowerCase().includes(searchTerm));
+    
+    const sortOrder = $('#sort').value;
+    if (sortOrder === 'asc') {
+      filteredClasses.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
     } else {
-      loginPage.style.display = 'flex';
-      mainPage.style.display = 'none';
-      subjectPage.style.display = 'none';
+      filteredClasses.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     }
-  </script>
+    
+    renderCards(filteredClasses, $('#classGrid'));
+  });
+
+  $('#sort').addEventListener('change', () => {
+    const searchTerm = $('#search').value.trim().toLowerCase();
+    const classes = filterClassesByTimeRange('all');
+    const groupedClasses = groupClassesBySubject(classes);
+    const subjectClasses = groupedClasses[currentSubject] || [];
+    const filteredClasses = subjectClasses.filter(cls => cls.title.toLowerCase().includes(searchTerm));
+    
+    const sortOrder = $('#sort').value;
+    if (sortOrder === 'asc') {
+      filteredClasses.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    } else {
+      filteredClasses.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    }
+    
+    renderCards(filteredClasses, $('#classGrid'));
+  });
+
+  $('.back-button').addEventListener('click', e => {
+    e.preventDefault();
+    subjectPage.style.display = 'none';
+    mainPage.style.display = 'block';
+    scrollToTop();
+    $('#search-subjects').value = '';
+    const pills = $all('.subject-link');
+    pills.forEach(pill => {
+      pill.style.display = 'flex';
+    });
+  });
+
+  $('#refresh-data-btn').addEventListener('click', async () => {
+    const rows = await fetchData();
+    allClasses = normalizeRows(rows);
+    groupedClassesCache = {};
+    renderTodayClassesSummary(filterClassesByTimeRange($('#sort-classes').value));
+    
+    if (subjectPage.style.display === 'block' && currentSubject) {
+      showSubjectPage(currentSubject);
+    }
+    
+    showNotification("ডেটা রিফ্রেশ হয়েছে!");
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (checkLoginExpiry()) {
+    loginPage.style.display = 'none';
+    mainPage.style.display = 'block';
+    loadInitialData();
+    showAddClassButton();
+  } else {
+    loginPage.style.display = 'flex';
+    mainPage.style.display = 'none';
+    subjectPage.style.display = 'none';
+  }
+  initializeEventListeners();
+});
+</script>
 </body>
 </html>

@@ -2339,32 +2339,9 @@ window.trackItem = function(id, type) {
   if (completed.includes(id)) {
     return; // Already completed
   }
-
-  if (type === 'class') {
-    let scrolled = false;
-    const scrollListener = () => { scrolled = true; };
-    window.addEventListener('scroll', scrollListener);
-
-    const minTime = 0; // seconds
-    const maxTime = 0; // 7 minutes in seconds
-    const randomTime = Math.random() * (maxTime - minTime) + minTime;
-
-    setTimeout(() => {
-      window.removeEventListener('scroll', scrollListener);
-      if (!scrolled) {
-        completed.push(id);
-        saveStudentData(studentData.name, studentData.joinDate, new Date().toISOString(), new Date().toISOString(), completed);
-        showNotification(`${type} সম্পন্ন হয়েছে!`, false);
-      } else {
-        showNotification('পেজ স্ক্রল হয়েছে, সম্পন্ন মনে করা হয়নি।', true);
-      }
-    }, randomTime * 1000);
-  } else {
-    // For missions and exams, complete immediately
-    completed.push(id);
-    saveStudentData(studentData.name, studentData.joinDate, new Date().toISOString(), new Date().toISOString(), completed);
-    showNotification(`${type} সম্পন্ন হয়েছে!`, false);
-  }
+  completed.push(id);
+  saveStudentData(studentData.name, studentData.joinDate, new Date().toISOString(), new Date().toISOString(), completed);
+  showNotification(`${type} সম্পন্ন হয়েছে!`, false);
 };
 
 function getItemsFromAllClasses() {

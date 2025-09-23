@@ -1963,6 +1963,9 @@ function normalizeRows(rows) {
       return acc;
     }, {});
 
+    // নির্দিষ্ট ফোল্ডারগুলোর জন্য লিংক কলাম E থেকে নেওয়া হবে
+    const specialFolders = ["মিশন", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট"];
+
     // প্রতিটি সাবজেক্টের ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (পুরানো থেকে নতুন)
     const normalizedRows = [];
     Object.keys(groupedBySubject).forEach(subject => {
@@ -1973,7 +1976,8 @@ function normalizeRows(rows) {
       // প্রতিটি ক্লাসের জন্য সিরিয়াল নাম্বার যুক্ত করা (পুরানো ক্লাস থেকে শুরু)
       sortedClasses.forEach((row, index) => {
         const timestamp = row.timestamp || '';
-        const link = row.link || '#';
+        // নির্দিষ্ট ফোল্ডারগুলোর জন্য কলাম E (file) থেকে লিংক নেওয়া, অন্যদের জন্য কলাম C (link)
+        const link = specialFolders.includes(subject) ? (row.file || '#') : (row.link || '#');
         const title = row.title || 'ক্লাস ভিডিও';
         const date = getDateFromTimestamp(timestamp);
         const time = getTimeFromTimestamp(timestamp);
@@ -1997,7 +2001,7 @@ function normalizeRows(rows) {
     console.error("Rows normalization error:", error);
     return [];
   }
-}
+    }
 
 function isExamTimeExpired(timestamp) {
   if (!timestamp) return false;

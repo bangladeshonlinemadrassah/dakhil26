@@ -2993,6 +2993,14 @@ window.addEventListener('click',(e)=>{
 });
 </script>
   <script>
+    // DOMContentLoaded event এ নোটিশ বারটি visible করুন
+document.addEventListener('DOMContentLoaded', function() {
+  const noticeBar = document.querySelector('.notice-bar');
+  if (noticeBar) {
+    noticeBar.style.visibility = 'visible';
+    noticeBar.style.opacity = '1';
+  }
+});
     document.addEventListener('DOMContentLoaded', () => {
       const role = getUserRole();
       const formButton = $('#form-button');

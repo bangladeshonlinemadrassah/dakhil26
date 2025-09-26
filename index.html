@@ -1551,6 +1551,7 @@ body::-webkit-scrollbar{display:none;}
 .submit-button{width:100%;padding:12px;border-radius:10px;border:none;background:var(--gradient-primary);color:white;font-weight:600;font-size:0.95rem;cursor:pointer;transition:var(--transition);box-shadow:0 4px 10px rgba(37,99,235,0.3);display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-button:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(37,99,235,0.4);}
 .submit-button.loading .spinner{display:inline-block;}
+.submit-button.loading{animation: none !important;}
 .spinner{display:none;width:16px;height:16px;border:2px solid white;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 .success-message{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--secondary);color:white;padding:20px 40px;border-radius:10px;z-index:2000;font-size:1rem;box-shadow:var(--shadow-md);text-align:center;max-width:80%;}
@@ -2097,7 +2098,6 @@ async function fetchData() {
 
 function normalizeRows(rows) {
   try {
-    // প্রথমে ক্লাসগুলোকে সাবজেক্ট অনুযায়ী গ্রুপ করা
     const groupedBySubject = rows.reduce((acc, row) => {
       const subjectFromSheet = row.subject || 'Unknown Subject';
       const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
@@ -2108,41 +2108,94 @@ function normalizeRows(rows) {
       return acc;
     }, {});
 
-    // নির্দিষ্ট ফোল্ডারগুলো
-    const specialFolders = ["মিশন", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট"];
+    const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
 
-    // প্রতিটি সাবজেক্টের ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (পুরানো থেকে নতুন)
+    // Sort all rows by timestamp ascending (oldest to newest)
+    const sortedRows = rows.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+    // Group by type
+    const classItems = [];
+    const missionItems = [];
+    const examItems = [];
+    sortedRows.forEach(row => {
+      const subject = findBestMatchingSubject(row.subject) || row.subject;
+      if (subject === 'মিশন') {
+        missionItems.push(row);
+      } else if (subject === 'ইক্সাম') {
+        examItems.push(row);
+      } else {
+        classItems.push(row);
+      }
+    });
+
     const normalizedRows = [];
-    Object.keys(groupedBySubject).forEach(subject => {
-      const sortedClasses = groupedBySubject[subject].sort((a, b) => {
-        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+    // Assign serial for class items
+    classItems.forEach((row, index) => {
+      const timestamp = row.timestamp || '';
+      let link = row.link || '#';
+      const subject = findBestMatchingSubject(row.subject) || row.subject;
+      if (specialFolders.includes(subject)) {
+        link = row.link || row.file || '#';
+      }
+      const title = row.title || 'ক্লাস ভিডিও';
+      const date = getDateFromTimestamp(timestamp);
+      const time = getTimeFromTimestamp(timestamp);
+      const serial = index + 1;
+
+      normalizedRows.push({
+        subject: subject,
+        originalSubject: row.subject,
+        link: link,
+        title: title,
+        date: date,
+        time: time,
+        serial: serial,
+        timestamp: timestamp,
+        type: 'class'
       });
+    });
 
-      // প্রতিটি ক্লাসের জন্য সিরিয়াল নাম্বার যুক্ত করা
-      sortedClasses.forEach((row, index) => {
-        const timestamp = row.timestamp || '';
-        // স্পেশাল ফোল্ডারের জন্য কলাম C (link) থাকলে সেটি, নইলে কলাম E (file) নেওয়া
-        let link = '#';
-        if (specialFolders.includes(subject)) {
-          link = row.link || row.file || '#'; // প্রথমে C, নইলে E
-        } else {
-          link = row.link || '#'; // অন্য ফোল্ডারের জন্য শুধুমাত্র C
-        }
-        const title = row.title || 'ক্লাস ভিডিও';
-        const date = getDateFromTimestamp(timestamp);
-        const time = getTimeFromTimestamp(timestamp);
-        const serial = index + 1;
+    // Assign serial for mission items
+    missionItems.forEach((row, index) => {
+      const timestamp = row.timestamp || '';
+      const link = row.link || '#';
+      const title = row.title || 'মিশন';
+      const date = getDateFromTimestamp(timestamp);
+      const time = getTimeFromTimestamp(timestamp);
+      const serial = index + 1;
 
-        normalizedRows.push({
-          subject: subject,
-          originalSubject: row.subject,
-          link: link, // একটি লিংক (C অথবা E)
-          title: title,
-          date: date,
-          time: time,
-          serial: serial,
-          timestamp: timestamp
-        });
+      normalizedRows.push({
+        subject: 'মিশন',
+        originalSubject: row.subject,
+        link: link,
+        title: title,
+        date: date,
+        time: time,
+        serial: serial,
+        timestamp: timestamp,
+        type: 'mission'
+      });
+    });
+
+    // Assign serial for exam items
+    examItems.forEach((row, index) => {
+      const timestamp = row.timestamp || '';
+      const link = row.link || '#';
+      const title = row.title || 'ইক্সাম';
+      const date = getDateFromTimestamp(timestamp);
+      const time = getTimeFromTimestamp(timestamp);
+      const serial = index + 1;
+
+      normalizedRows.push({
+        subject: 'ইক্সাম',
+        originalSubject: row.subject,
+        link: link,
+        title: title,
+        date: date,
+        time: time,
+        serial: serial,
+        timestamp: timestamp,
+        type: 'exam'
       });
     });
 
@@ -2283,21 +2336,9 @@ function renderCards(rows, root) {
         highlightedClassTimestamp = null;
       }, 5000);
     }
-    let onclickAttr = '';
-    let idPrefix = '';
-    let type = '';
-    if (r.subject === "মিশন") {
-      idPrefix = 'm';
-      type = 'mission';
-    } else if (r.subject === "ইক্সাম") {
-      idPrefix = 'e';
-      type = 'exam';
-    } else {
-      idPrefix = 'c';
-      type = 'class';
-    }
-    const itemId = idPrefix + String(r.serial).padStart(2, '0');
-    onclickAttr = `onclick="trackItem('${itemId}', '${type}')"`
+    const idPrefix = r.type === 'mission' ? 'm' : r.type === 'exam' ? 'e' : 'c';
+    const itemId = idPrefix + String(r.serial).padStart(3, '0'); // Increased to 3 digits for more items
+    const onclickAttr = `onclick="trackItem('${itemId}', '${r.type}')"`
     card.innerHTML = `
       <span class="card-badge bangla-font">ক্লাস ${r.serial}</span>
       <div class="subject"><i class="fas fa-book"></i> <span class="bangla-font">${r.subject}</span></div>
@@ -2528,13 +2569,15 @@ function getItemsFromAllClasses() {
     exams: []
   };
 
-  allClasses.forEach((cls, index) => {
-    if (cls.subject === 'মিশন') {
-      items.missions.push({ id: 'm' + String(index + 1).padStart(2, '0'), addDate: cls.date });
-    } else if (cls.subject === 'ইক্সাম') {
-      items.exams.push({ id: 'e' + String(index + 1).padStart(2, '0'), addDate: cls.date });
+  allClasses.forEach(cls => {
+    const id = (cls.type === 'mission' ? 'm' : cls.type === 'exam' ? 'e' : 'c') + String(cls.serial).padStart(3, '0');
+    const item = { id: id, addDate: cls.date };
+    if (cls.type === 'mission') {
+      items.missions.push(item);
+    } else if (cls.type === 'exam') {
+      items.exams.push(item);
     } else {
-      items.classes.push({ id: 'c' + String(index + 1).padStart(2, '0'), addDate: cls.date });
+      items.classes.push(item);
     }
   });
 
@@ -2962,4 +3005,4 @@ window.addEventListener('click',(e)=>{
     });
   </script>
 </body>
-  </html>
+</html>

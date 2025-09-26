@@ -2995,24 +2995,36 @@ window.addEventListener('click',(e)=>{
 });
 </script>
   <script>
-    // DOMContentLoaded event এ নোটিশ বারটি visible করুন
+// Single DOMContentLoaded event with better timing
 document.addEventListener('DOMContentLoaded', function() {
+  // Immediately show notice bar (highest priority)
   const noticeBar = document.querySelector('.notice-bar');
-  if (noticeBar) {
+  const noticeSpan = document.querySelector('.notice-bar span');
+  
+  if (noticeBar && noticeSpan) {
+    // Step 1: Instant visibility
     noticeBar.style.visibility = 'visible';
     noticeBar.style.opacity = '1';
+    
+    // Step 2: Force animation restart
+    setTimeout(() => {
+      noticeSpan.style.animation = 'none';
+      void noticeSpan.offsetWidth;
+      noticeSpan.style.animation = 'marquee 30s linear infinite 0s';
+    }, 10);
+  }
+
+  // Other initialization code
+  const role = getUserRole();
+  const formButton = $('#form-button');
+  const submissionsButton = $('#submissions-button');
+  
+  if (role === 'user') {
+    submissionsButton.style.display = 'none';
+  } else if (role === 'owner') {
+    formButton.style.display = 'none';
   }
 });
-    document.addEventListener('DOMContentLoaded', () => {
-      const role = getUserRole();
-      const formButton = $('#form-button');
-      const submissionsButton = $('#submissions-button');
-      if (role === 'user') {
-        submissionsButton.style.display = 'none';
-      } else if (role === 'owner') {
-        formButton.style.display = 'none';
-      }
-    });
   </script>
 </body>
 </html>

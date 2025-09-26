@@ -1587,8 +1587,9 @@ body::-webkit-scrollbar{display:none;}
 }
 .notice-bar span {
   display: inline-block;
-  animation: marquee 35s linear infinite;
-}
+  animation: marquee 30s linear infinite 0s; /* explicitly 0s delay */
+  animation-fill-mode: both;
+    }
 @keyframes marquee {
   from { transform: translateX(100%); }
   to { transform: translateX(-100%); }

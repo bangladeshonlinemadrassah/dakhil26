@@ -3015,15 +3015,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 10);
   }
 
-  // Other initialization code
+  // Other initialization code - এখানে সমস্যা!
   const role = getUserRole();
   const formButton = $('#form-button');
   const submissionsButton = $('#submissions-button');
   
   if (role === 'user') {
+    // USER হলে শুধু কমেন্ট বাটন দেখাবে
+    formButton.style.display = 'inline-flex';
     submissionsButton.style.display = 'none';
   } else if (role === 'owner') {
+    // OWNER হলে শুধু সাবমিশন বাটন দেখাবে  
     formButton.style.display = 'none';
+    submissionsButton.style.display = 'inline-flex';
   }
 });
   </script>

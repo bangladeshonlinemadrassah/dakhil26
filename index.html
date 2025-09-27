@@ -1584,16 +1584,23 @@ body::-webkit-scrollbar{display:none;}
   text-align: center;
   border-bottom: 1px solid var(--card-border);
   margin-top: 0;
+  position: relative;
 }
+
 .notice-bar span {
   display: inline-block;
-  animation: marquee 40s linear infinite 0s; /* explicitly 0s delay */
-  animation-fill-mode: both;
-    }
-@keyframes marquee {
-  from { transform: translateX(100%); }
-  to { transform: translateX(-100%); }
+  animation: marquee 40s linear infinite 0s;
+  padding-left: 100%; /* এটি গুরুত্বপূর্ণ - gap দূর করবে */
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+    }
   </style>
 </head>
 <body>

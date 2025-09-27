@@ -1584,15 +1584,23 @@ body::-webkit-scrollbar{display:none;}
   text-align: center;
   border-bottom: 1px solid var(--card-border);
   margin-top: 0;
+  position: relative;
 }
+
 .notice-bar span {
   display: inline-block;
-  animation: marquee 20s linear infinite;
+  animation: marquee 40s linear infinite 0s;
+  padding-left: 100%; /* এটি গুরুত্বপূর্ণ - gap দূর করবে */
 }
+
 @keyframes marquee {
-  from { transform: translateX(100%); }
-  to { transform: translateX(-100%); }
-}
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+    }
   </style>
 </head>
 <body>
@@ -2126,7 +2134,7 @@ function normalizeRows(rows) {
         const timestamp = row.timestamp || '';
         let link = row.link || '#';
         if (specialFolders.includes(subject)) {
-          link = row.link || row.file || '#';
+          link = row.file || row.link || '#';
         }
         const title = row.title || (subject === 'মিশন' ? 'মিশন' : subject === 'ইক্সাম' ? 'ইক্সাম' : 'ক্লাস ভিডিও');
         const date = getDateFromTimestamp(timestamp);
@@ -2439,7 +2447,7 @@ const STORAGE_KEYS = {
 };
 
 const motivationalQuotes = [
-  "প্রতিদিন একটি ক্লাস করুন, সাফল্য আপনার কাছে আসবে! 🌟",
+  "প্রতিদিনের ক্লাস প্রতিদিন করুন, সাফল্য আপনার কাছে আসবে! 🌟",
   "ছোট ছোট পদক্ষেপই বড় সাফল্যের পথ তৈরি করে! 💪",
   "নিয়মিত পড়াশোনা আপনাকে লক্ষ্যের কাছে নিয়ে যাবে! 🚀",
   "প্রতিটি ক্লাস আপনাকে এক ধাপ এগিয়ে নেয়! 🏆"

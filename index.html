@@ -1559,6 +1559,30 @@ body::-webkit-scrollbar{display:none;}
 .notification.show{opacity:1;transform:translateY(0);}
 .notification.success{border-left:4px solid var(--secondary);}
 .notification.error{border-left:4px solid var(--danger);}
+    /* সাবমিশন লোডিং স্টাইল - এই CSS যোগ করুন */
+.submission-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.submission-loading .loading {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+.submission-loading-text {
+  font-size: 0.9rem;
+  text-align: center;
+}
 .submissions-list,.reply-list,.sub-buttons{display:flex;flex-direction:column;gap:15px;max-height:60vh;overflow-y:auto;scroll-behavior:smooth;}
 .submission-item{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:15px;box-shadow:var(--shadow-sm);transition:var(--transition);}
 .submission-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
@@ -2829,6 +2853,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
   </script>
   <script>
+    // টাইম ফরম্যাট করার ফাংশন - এই ফাংশনটি যোগ করুন
+function formatSubmissionTime(timestamp) {
+  if (!timestamp) return 'সময় নেই';
+  
+  try {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    
+    return `${day}-${month}-${year} _ ${hours}:${minutes} ${ampm}`;
+  } catch (error) {
+    return timestamp;
+  }
+    }
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzEX1EuBWpSMlZ9zbXs1lAVQkOTdeV779SsD6SF6RllQGMYxcHJu30p5BPzW7O-PAbysg/exec";
 
 function $(sel){ return document.querySelector(sel); }
@@ -2877,8 +2923,18 @@ function hideForm(){ $('#formModal').style.display='none'; }
 
 function showSubmissions(){ 
   $('#submissionsModal').style.display='flex'; 
+  
+  // Show loading immediately
+  const list = $('#submissions-list');
+  list.innerHTML = `
+    <div class="submission-loading">
+      <div class="loading"></div>
+      <div class="submission-loading-text bangla-font">সাবমিশন লোড হচ্ছে...</div>
+    </div>
+  `;
+  
   loadSubmissions(); 
-}
+    }
 
 function hideSubmissions(){ $('#submissionsModal').style.display='none'; }
 
@@ -2927,22 +2983,55 @@ function loadSubmissions() {
     .then(data => {
       const list = $('#submissions-list');
       list.innerHTML = '';
-      data.forEach(item => {
+      
+      if (!data || data.length === 0) {
+        list.innerHTML = `
+          <div class="submission-loading">
+            <i class="fas fa-inbox" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 15px;"></i>
+            <div class="submission-loading-text bangla-font">কোন সাবমিশন পাওয়া যায়নি</div>
+          </div>
+        `;
+        return;
+      }
+      
+      // নতুন থেকে পুরানো সাজানো
+      const sortedData = data.sort((a, b) => {
+        const timeA = new Date(a.timestamp || a.time || 0).getTime();
+        const timeB = new Date(b.timestamp || b.time || 0).getTime();
+        return timeB - timeA; // নতুন থেকে পুরানো
+      });
+      
+      sortedData.forEach((item) => {
         const div = document.createElement('div');
         div.className = 'submission-item';
+        
         div.innerHTML = `
-          <div class="submission-name bangla-font">${item.name}</div>
-          <div class="submission-batch bangla-font">ব্যাচ: ${item.batch}</div>
-          <div class="submission-message bangla-font">${item.message}</div>
-          ${item.reply ? `<div class="submission-reply bangla-font">উত্তর: ${item.reply}</div>` : ''}
-          <div class="submission-time bangla-font">${item.time}</div>
+          <div class="submission-name bangla-font">${item.name || 'নাম নেই'}</div>
+          <div class="submission-batch bangla-font">ব্যাচ: ${item.batch || 'ব্যাচ নেই'}</div>
+          <div class="submission-message bangla-font">${item.message || 'মেসেজ নেই'}</div>
+          ${item.reply ? `
+            <div class="submission-reply bangla-font">
+              <strong>উত্তর:</strong> ${item.reply}
+            </div>
+          ` : ''}
+          <div class="submission-time bangla-font">${formatSubmissionTime(item.timestamp || item.time)}</div>
         `;
         list.appendChild(div);
       });
     })
-    .catch(() => showNotification("সাবমিশন লোড হয়নি! আবার চেষ্টা করুন।", true));
-}
-
+    .catch(() => {
+      const list = $('#submissions-list');
+      list.innerHTML = `
+        <div class="submission-loading">
+          <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: var(--warning); margin-bottom: 15px;"></i>
+          <div class="submission-loading-text bangla-font">সাবমিশন লোড হয়নি! আবার চেষ্টা করুন।</div>
+          <button class="btn" onclick="loadSubmissions()" style="margin-top: 15px;">
+            <i class="fas fa-redo"></i> <span class="bangla-font">আবার চেষ্টা করুন</span>
+          </button>
+        </div>
+      `;
+    });
+    
 $('#form-button').addEventListener('click', handleFormClick);
 $('#submissions-button').addEventListener('click',showSubmissions);
 window.addEventListener('click',(e)=>{ 

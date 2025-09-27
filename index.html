@@ -2116,7 +2116,7 @@ function normalizeRows(rows) {
       return acc;
     }, {});
 
-    const specialFolders = ["ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
+    const specialFolders = ["মিশন", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট", "অন্যান্য"];
 
     // Sort all rows by timestamp ascending (oldest to newest)
     const sortedRows = rows.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
@@ -2143,7 +2143,7 @@ function normalizeRows(rows) {
       let link = row.link || '#';
       const subject = findBestMatchingSubject(row.subject) || row.subject;
       if (specialFolders.includes(subject)) {
-        link = row.link || row.file || '#';
+        link = row.file || row.link || '#';
       }
       const title = row.title || 'ক্লাস ভিডিও';
       const date = getDateFromTimestamp(timestamp);
@@ -2497,7 +2497,7 @@ const STORAGE_KEYS = {
 };
 
 const motivationalQuotes = [
-  "প্রতিদিন একটি ক্লাস করুন, সাফল্য আপনার কাছে আসবে! 🌟",
+  "নিয়মিত ক্লাস করুন, সাফল্য আপনার কাছে আসবে! 🌟",
   "ছোট ছোট পদক্ষেপই বড় সাফল্যের পথ তৈরি করে! 💪",
   "নিয়মিত পড়াশোনা আপনাকে লক্ষ্যের কাছে নিয়ে যাবে! 🚀",
   "প্রতিটি ক্লাস আপনাকে এক ধাপ এগিয়ে নেয়! 🏆"

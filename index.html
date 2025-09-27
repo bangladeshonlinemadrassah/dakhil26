@@ -1845,10 +1845,8 @@ body::-webkit-scrollbar{display:none;}
         <label class="bangla-font" for="batch">ব্যাচ নাম</label>
         <select name="batch" id="batch" required class="bangla-font">
           <option value="" disabled selected class="bangla-font">ব্যাচ নির্বাচন করুন</option>
-          <option value="Alim-25" class="bangla-font">আলিম-২৫</option>
           <option value="Dakhil-26" class="bangla-font">দাখিল-২৬</option>
-          <option value="Alim-26" class="bangla-font">আলিম-২৬</option>
-        </select><br>
+          </select><br>
         <label class="bangla-font" for="message">মতামত/পরামর্শ/অভিযোগ</label>
         <textarea name="message" id="message" placeholder="আপনার মতামত লিখুন" required class="bangla-font"></textarea>
         <button type="submit" class="submit-button bangla-font" id="submitBtn">জমা দিন <span class="spinner"></span></button>
@@ -2877,8 +2875,12 @@ function hideForm(){ $('#formModal').style.display='none'; }
 
 function showSubmissions(){ 
   $('#submissionsModal').style.display='flex'; 
+  
+  // শুধু এই ১ লাইন যোগ করুন
+  $('#submissions-list').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)" class="bangla-font">লোড হচ্ছে...</div>';
+  
   loadSubmissions(); 
-}
+    }
 
 function hideSubmissions(){ $('#submissionsModal').style.display='none'; }
 
@@ -2928,10 +2930,10 @@ function loadSubmissions() {
       const list = $('#submissions-list');
       list.innerHTML = '';
       
-      // নতুন লাইন যোগ করুন
+      // সিরিয়াল ঠিক করা
       data.sort((a, b) => new Date(b.timestamp || b.time) - new Date(a.timestamp || a.time));
       
-      data.forEach(item => {  // ← এই লাইন আগের মতই
+      data.forEach(item => {
         const div = document.createElement('div');
         div.className = 'submission-item';
         div.innerHTML = `
@@ -2944,9 +2946,11 @@ function loadSubmissions() {
         list.appendChild(div);
       });
     })
-    .catch(() => showNotification("সাবমিশন লোড হয়নি! আবার চেষ্টা করুন।", true));
-}
-
+    .catch(() => {
+      // error হলে শুধু notification দেখাবে
+      showNotification("সাবমিশন লোড হয়নি! আবার চেষ্টা করুন।", true);
+    });
+    }
 $('#form-button').addEventListener('click', handleFormClick);
 $('#submissions-button').addEventListener('click',showSubmissions);
 window.addEventListener('click',(e)=>{ 

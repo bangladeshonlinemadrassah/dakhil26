@@ -2930,10 +2930,20 @@ function loadSubmissions() {
       const list = $('#submissions-list');
       list.innerHTML = '';
       
-      // সিরিয়াল ঠিক করা
-      data.sort((a, b) => new Date(b.timestamp || b.time) - new Date(a.timestamp || a.time));
+      // শুধুমাত্র Dakhil-26 ব্যাচ ফিল্টার করুন
+      const dakhil26Submissions = data.filter(item => 
+        item.batch && item.batch.toString().toLowerCase().includes('dakhil-26')
+      );
       
-      data.forEach(item => {
+      // নতুন থেকে পুরানো সাজানো
+      dakhil26Submissions.sort((a, b) => new Date(b.timestamp || b.time) - new Date(a.timestamp || a.time));
+      
+      if (dakhil26Submissions.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)" class="bangla-font">Dakhil-26 ব্যাচের কোন সাবমিশন নেই</div>';
+        return;
+      }
+      
+      dakhil26Submissions.forEach(item => {
         const div = document.createElement('div');
         div.className = 'submission-item';
         div.innerHTML = `
@@ -2946,10 +2956,7 @@ function loadSubmissions() {
         list.appendChild(div);
       });
     })
-    .catch(() => {
-      // error হলে শুধু notification দেখাবে
-      showNotification("সাবমিশন লোড হয়নি! আবার চেষ্টা করুন।", true);
-    });
+    .catch(() => showNotification("সাবমিশন লোড হয়নি! আবার চেষ্টা করুন।", true));
     }
 $('#form-button').addEventListener('click', handleFormClick);
 $('#submissions-button').addEventListener('click',showSubmissions);

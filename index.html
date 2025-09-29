@@ -1513,6 +1513,68 @@
       padding: 5px 10px;
       font-size: 0.8rem;
     }
+
+    /* Dashboard Table Styles - Attractive and Colorful */
+    .stats-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 15px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      background: var(--card-bg);
+    }
+
+    .stats-table th,
+    .stats-table td {
+      padding: 12px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.9rem;
+    }
+
+    .stats-table th {
+      background: var(--gradient-primary);
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .stats-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+    }
+
+    .stats-table .total {
+      color: #2563eb; /* Blue for total */
+      font-weight: 600;
+    }
+
+    .stats-table .done {
+      color: #10b981; /* Green for done */
+      font-weight: 600;
+    }
+
+    .stats-table .pending {
+      color: #ef4444; /* Red for pending */
+      font-weight: 600;
+    }
+
+    .stats h2 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      background: var(--gradient-secondary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
   </style>
   <style>
 :root{
@@ -1601,6 +1663,46 @@ body::-webkit-scrollbar{display:none;}
     transform: translateX(-100%);
   }
     }
+
+    /* Clock Styles - Attractive Digital Clock */
+    .clock-container {
+      text-align: center;
+      margin: 20px auto;
+      padding: 15px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(10px);
+      max-width: 300px;
+    }
+
+    .clock-time {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 5px;
+    }
+
+    .clock-date {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .clock-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-secondary);
+    }
+
   </style>
 </head>
 <body>
@@ -1651,6 +1753,11 @@ body::-webkit-scrollbar{display:none;}
       <div class="hero fade-in">
         <h1 class="bangla-font">Dakhil-26 "Final Stage Preparation Course"</h1>
         <p class="bangla-font">শিক্ষার যাত্রায় এক নতুন দিগন্ত। বাংলাদেশ অনলাইন মাদ্রাসা (BOM) এর প্রাইভেট ব্যাচের দাখিল-২৬ শিক্ষার্থীদের জন্য প্রিমিয়াম লার্নিং এক্সপেরিয়েন্স</p>
+      </div>
+      <!-- Attractive Clock with Date -->
+      <div class="clock-container fade-in">
+        <div id="clock-time" class="clock-time"></div>
+        <div id="clock-date" class="clock-date"></div>
       </div>
       <div class="stats">
         <div class="stat-card fade-in">
@@ -2667,50 +2774,70 @@ function showDashboard() {
 
       <section class="stats after-join bangla-font">
         <h2>জয়েন-এর পর</h2>
-        <div class="cards">
-          <div class="card" id="card-classes">
-            <h3>ক্লাস</h3>
-            <p>মোট: <span id="after-total-classes">${stats.after.totalClasses}</span></p>
-            <p>করা হয়েছে: <span id="after-done-classes">${stats.after.doneClasses}</span></p>
-            <p>বাকি আছে: <span id="after-pending-classes">${stats.after.pendingClasses}</span></p>
-          </div>
-          <div class="card" id="card-missions">
-            <h3>মিশন</h3>
-            <p>মোট: <span id="after-total-missions">${stats.after.totalMissions}</span></p>
-            <p>সম্পন্ন হয়েছে: <span id="after-done-missions">${stats.after.doneMissions}</span></p>
-            <p>বাকি আছে: <span id="after-pending-missions">${stats.after.pendingMissions}</span></p>
-          </div>
-          <div class="card" id="card-exams">
-            <h3>পরীক্ষা</h3>
-            <p>মোট: <span id="after-total-exams">${stats.after.totalExams}</span></p>
-            <p>দেওয়া হয়েছে: <span id="after-done-exams">${stats.after.doneExams}</span></p>
-            <p>বাকি আছে: <span id="after-pending-exams">${stats.after.pendingExams}</span></p>
-          </div>
-        </div>
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>আইটেম</th>
+              <th>মোট</th>
+              <th>সম্পন্ন</th>
+              <th>বাকি</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ক্লাস</td>
+              <td class="total">${stats.after.totalClasses}</td>
+              <td class="done">${stats.after.doneClasses}</td>
+              <td class="pending">${stats.after.pendingClasses}</td>
+            </tr>
+            <tr>
+              <td>মিশন</td>
+              <td class="total">${stats.after.totalMissions}</td>
+              <td class="done">${stats.after.doneMissions}</td>
+              <td class="pending">${stats.after.pendingMissions}</td>
+            </tr>
+            <tr>
+              <td>পরীক্ষা</td>
+              <td class="total">${stats.after.totalExams}</td>
+              <td class="done">${stats.after.doneExams}</td>
+              <td class="pending">${stats.after.pendingExams}</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section class="stats before-join bangla-font">
         <h2>জয়েন-এর আগে</h2>
-        <div class="cards">
-          <div class="card">
-            <h3>ক্লাস</h3>
-            <p>মোট: <span id="before-total-classes">${stats.before.totalClasses}</span></p>
-            <p>করা হয়েছে: <span id="before-done-classes">${stats.before.doneClasses}</span></p>
-            <p>বাকি আছে: <span id="before-pending-classes">${stats.before.pendingClasses}</span></p>
-          </div>
-          <div class="card">
-            <h3>মিশন</h3>
-            <p>মোট: <span id="before-total-missions">${stats.before.totalMissions}</span></p>
-            <p>সম্পন্ন হয়েছে: <span id="before-done-missions">${stats.before.doneMissions}</span></p>
-            <p>বাকি আছে: <span id="before-pending-missions">${stats.before.pendingMissions}</span></p>
-          </div>
-          <div class="card">
-            <h3>পরীক্ষা</h3>
-            <p>মোট: <span id="before-total-exams">${stats.before.totalExams}</span></p>
-            <p>দেওয়া হয়েছে: <span id="before-done-exams">${stats.before.doneExams}</span></p>
-            <p>বাকি আছে: <span id="before-pending-exams">${stats.before.pendingExams}</span></p>
-          </div>
-        </div>
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>আইটেম</th>
+              <th>মোট</th>
+              <th>সম্পন্ন</th>
+              <th>বাকি</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ক্লাস</td>
+              <td class="total">${stats.before.totalClasses}</td>
+              <td class="done">${stats.before.doneClasses}</td>
+              <td class="pending">${stats.before.pendingClasses}</td>
+            </tr>
+            <tr>
+              <td>মিশন</td>
+              <td class="total">${stats.before.totalMissions}</td>
+              <td class="done">${stats.before.doneMissions}</td>
+              <td class="pending">${stats.before.pendingMissions}</td>
+            </tr>
+            <tr>
+              <td>পরীক্ষা</td>
+              <td class="total">${stats.before.totalExams}</td>
+              <td class="done">${stats.before.doneExams}</td>
+              <td class="pending">${stats.before.pendingExams}</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section id="alarms" class="alarms bangla-font"></section>
@@ -2993,7 +3120,28 @@ document.addEventListener('DOMContentLoaded', function() {
     urlParams.set('refreshed', 'true');
     window.location.search = urlParams.toString();
   }
+
+  // Initialize Clock
+  updateClock();
+  setInterval(updateClock, 1000);
 });
+
+function updateClock() {
+  const now = new Date();
+  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  const timeStr = now.toLocaleTimeString('bn-BD', timeOptions); // Bengali digits for time
+  const dateStr = now.toLocaleDateString('bn-BD', dateOptions); // Bengali date
+
+  const clockTime = document.getElementById('clock-time');
+  const clockDate = document.getElementById('clock-date');
+
+  if (clockTime && clockDate) {
+    clockTime.textContent = timeStr;
+    clockDate.textContent = dateStr;
+  }
+}
 
 function setButtonVisibility() {
   const role = getUserRole();

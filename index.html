@@ -1663,6 +1663,51 @@ body::-webkit-scrollbar{display:none;}
     transform: translateX(-100%);
   }
     }
+
+    /* Clock Styles - Attractive Digital Clock */
+    .clock-container {
+      text-align: center;
+      margin: 20px auto;
+      padding: 25px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(10px);
+    }
+
+    .clock-time {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 5px;
+    }
+
+    .clock-date {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    #exam-countdown {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .clock-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-secondary);
+    }
+
   </style>
 </head>
 <body>
@@ -1713,6 +1758,12 @@ body::-webkit-scrollbar{display:none;}
       <div class="hero fade-in">
         <h1 class="bangla-font">Dakhil-26 "Final Stage Preparation Course"</h1>
         <p class="bangla-font">শিক্ষার যাত্রায় এক নতুন দিগন্ত। বাংলাদেশ অনলাইন মাদ্রাসা (BOM) এর প্রাইভেট ব্যাচের দাখিল-২৬ শিক্ষার্থীদের জন্য প্রিমিয়াম লার্নিং এক্সপেরিয়েন্স</p>
+      </div>
+      <!-- Attractive Clock with Date -->
+      <div class="clock-container fade-in stat-card">
+        <div id="clock-time" class="clock-time"></div>
+        <div id="clock-date" class="clock-date"></div>
+        <div id="exam-countdown" class="stat-label bangla-font"></div>
       </div>
       <div class="stats">
         <div class="stat-card fade-in">
@@ -2363,7 +2414,7 @@ function renderCards(rows, root) {
       <div class="video-title bangla-font">${r.title}</div>
       <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${r.date}</span></div>
       ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
-      <a class="btn" target="_blank" rel="noopener" href="${r.link}" ${onclickAttr}><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
+      <a class="btn" target="_blank" rel="noopener" href="${r.link}" ${onclickAttr}><i class="fas fa-play"></i> <span class="bangla-font">${buttonText}</span></a>
     `;
     root.appendChild(card);
   });
@@ -3080,6 +3131,36 @@ document.addEventListener('DOMContentLoaded', function() {
   updateClock();
   setInterval(updateClock, 1000);
 });
+
+function updateClock() {
+  const now = new Date();
+  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  const timeStr = now.toLocaleTimeString('bn-BD', timeOptions); // Bengali digits for time
+  const dateStr = now.toLocaleDateString('bn-BD', dateOptions); // Bengali date
+
+  const clockTime = document.getElementById('clock-time');
+  const clockDate = document.getElementById('clock-date');
+  const examCountdown = document.getElementById('exam-countdown');
+
+  if (clockTime && clockDate && examCountdown) {
+    clockTime.textContent = timeStr;
+    clockDate.textContent = dateStr;
+
+    // Exam Countdown
+    const examDate = new Date(2026, 1, 8); // 08-02-2026 (Month is 0-indexed, so 1 = February)
+    let diff = examDate - now;
+
+    if (diff < 0) {
+      examCountdown.textContent = 'পরীক্ষা শুরু হয়েছে!';
+    } else {
+      const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+      const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+      examCountdown.textContent = `পরীক্ষা বাকি: ${months} মাস ${days} দিন`;
+    }
+  }
+}
 
 function setButtonVisibility() {
   const role = getUserRole();

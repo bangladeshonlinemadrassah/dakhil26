@@ -1674,6 +1674,8 @@ body::-webkit-scrollbar{display:none;}
       border-radius: 16px;
       box-shadow: var(--shadow-md);
       backdrop-filter: blur(10px);
+      max-width: 300px; /* Fixed size for clock box */
+      width: 100%; /* Responsive but max 300px */
     }
 
     .clock-time {
@@ -1753,7 +1755,7 @@ body::-webkit-scrollbar{display:none;}
         </div>
       </nav>
     </header>
-    <div class="notice-bar bangla-font"><span><b>নতুন যোগ করা হয়েছে: ড্যাশবোর্ড এবং কমেন্ট সুবিধা! আপনার শিক্ষা যাত্রার অগ্রগতি পর্যবেক্ষণ করুন এবং আপনার মূল্যবান মতামত নিচের কমেন্ট সেকশনের মাধ্যমে আমাদেরকে জানান।</b></span></div>
+    <div class="notice-bar bangla-font"><span><b>নতুন যোগ করা হয়েছে: ড্যাশবোর্ড এবং কমেন্ট সুবিধা! আপনার শিক্ষা যাত্রার অগ্রগতি পর্যবেক্ষণ করুন এবং আপনার মূল্যবান মতামত আমাদের জানান।</b></span></div>
     <main class="container">
       <div class="hero fade-in">
         <h1 class="bangla-font">Dakhil-26 "Final Stage Preparation Course"</h1>
@@ -1868,7 +1870,7 @@ body::-webkit-scrollbar{display:none;}
   <div id="subject-page" style="display: none;">
     <header>
       <nav class="nav container">
-        <a class="brand back-button" href="#"><i class="fas fa-arrow-left"></i> <span class="bangla-font">সব সাবজেক্ট</span></a>
+        <button class="brand back-button"><i class="fas fa-arrow-left"></i> <span class="bangla-font">সব সাবজেক্ট</span></button>
         <div class="filter-bar">
           <input id="search" type="search" placeholder="🔍 সার্চ...">
           <select id="sort">
@@ -1994,6 +1996,7 @@ const subjectPage = $('#subject-page');
 const warningModal = $('#warning-modal');
 let allClasses = [];
 let groupedClassesCache = {};
+let mainScrollPosition = 0; // New: To save main page scroll position
 
 const availableSubjects = [
   "কুরআন মাজীদ ও তাজভীদ", "হাদিস শরীফ", "আরবি প্রথম পত্র", "আরবি দ্বিতীয় পত্র",
@@ -2414,7 +2417,7 @@ function renderCards(rows, root) {
       <div class="video-title bangla-font">${r.title}</div>
       <div class="time"><i class="fas fa-clock"></i> ${r.time} | <span class="bangla-font">${r.date}</span></div>
       ${r.subject === "ইক্সাম" && isExpired ? '<div class="exam-expiry-notice bangla-font"><i class="fas fa-exclamation-triangle"></i> পরীক্ষায় অংশগ্রহণ করার নির্দিষ্ট সময় শেষ হয়ে গেছে</div>' : ''}
-      <a class="btn" target="_blank" rel="noopener" href="${r.link}" ${onclickAttr}><i class="fas fa-play"></i> <span class="bangla-font">${buttonText}</span></a>
+      <a class="btn" target="_blank" rel="noopener" href="${r.link}" ${onclickAttr}><i class="fas fa-play-circle"></i> <span class="bangla-font">${buttonText}</span></a>
     `;
     root.appendChild(card);
   });
@@ -2441,6 +2444,8 @@ async function loadInitialData() {
 
 function showSubjectPage(subject, fromTable = false) {
   currentSubject = subject;
+  mainScrollPosition = window.scrollY; // Save main page scroll position
+  history.pushState({ page: 'subject' }, ''); // Push state for back button
   mainPage.style.display = 'none';
   subjectPage.style.display = 'block';
   $('#subject-title').innerHTML = `<i class="fas fa-book"></i> <span class="bangla-font">${subject}</span>`;
@@ -2461,6 +2466,17 @@ function showSubjectPage(subject, fromTable = false) {
   }
 
   $('#search').value = '';
+}
+
+function returnToMainPage() {
+  subjectPage.style.display = 'none';
+  mainPage.style.display = 'block';
+  $('#search-subjects').value = '';
+  const pills = $all('.subject-link');
+  pills.forEach(pill => {
+    pill.style.display = 'flex';
+  });
+  window.scrollTo(0, mainScrollPosition); // Restore scroll position
 }
 
 function initializeEventListeners() {
@@ -2523,14 +2539,15 @@ function initializeEventListeners() {
 
   $('.back-button').addEventListener('click', e => {
     e.preventDefault();
-    subjectPage.style.display = 'none';
-    mainPage.style.display = 'block';
-    scrollToTop();
-    $('#search-subjects').value = '';
-    const pills = $all('.subject-link');
-    pills.forEach(pill => {
-      pill.style.display = 'flex';
-    });
+    history.back(); // Use history back instead of direct hide/show
+  });
+
+  window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.page === 'subject') {
+      showSubjectPage(currentSubject); // If popping to subject page
+    } else {
+      returnToMainPage(); // Back to main page
+    }
   });
 
   $('#refresh-data-btn').addEventListener('click', async () => {

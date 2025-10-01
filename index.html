@@ -3154,7 +3154,9 @@ function updateClock() {
   const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
-  const timeStr = now.toLocaleTimeString('bn-BD', timeOptions); // Bengali digits for time
+  // Time and date in Bengali
+  let timeStr = now.toLocaleTimeString('bn-BD', timeOptions); // Bengali digits for time
+  timeStr = timeStr.replace(/(AM|PM)/, '<small>$1</small>'); // Make AM/PM smaller
   const dateStr = now.toLocaleDateString('bn-BD', dateOptions); // Bengali date
 
   const clockTime = document.getElementById('clock-time');
@@ -3162,7 +3164,7 @@ function updateClock() {
   const examCountdown = document.getElementById('exam-countdown');
 
   if (clockTime && clockDate && examCountdown) {
-    clockTime.textContent = timeStr;
+    clockTime.innerHTML = timeStr; // Use innerHTML for <small> tag
     clockDate.textContent = dateStr;
 
     // Exam Countdown
@@ -3177,7 +3179,7 @@ function updateClock() {
       examCountdown.textContent = `বোর্ড পরীক্ষা শুরু: ${months} মাস ${days} দিন পর*`;
     }
   }
-    }
+}
 
 function setButtonVisibility() {
   const role = getUserRole();
@@ -3193,7 +3195,7 @@ function setButtonVisibility() {
   } else if (role === 'owner') {
     submissionsButton.style.display = 'inline-flex';
   }
-}
+    }
 </script>
 </body>
 </html>

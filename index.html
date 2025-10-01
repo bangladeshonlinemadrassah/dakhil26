@@ -3150,25 +3150,24 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Initialize Clock
-updateClock();
-setInterval(updateClock, 1000);
+  updateClock();
+  setInterval(updateClock, 1000);
+});
 
 function updateClock() {
   const now = new Date();
-  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', <small> hour12: true</small> };
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
-  // Time and date in English
-  let timeStr = now.toLocaleTimeString('en-US', timeOptions); // English digits and format
-  timeStr = timeStr.replace(/(AM|PM)/, '<small>$1</small>'); // Make PM/AM smaller
-  const dateStr = now.toLocaleDateString('en-US', dateOptions); // English date
+  const timeStr = now.toLocaleTimeString('bn-BD', timeOptions); // Bengali digits for time
+  const dateStr = now.toLocaleDateString('bn-BD', dateOptions); // Bengali date
 
   const clockTime = document.getElementById('clock-time');
   const clockDate = document.getElementById('clock-date');
   const examCountdown = document.getElementById('exam-countdown');
 
   if (clockTime && clockDate && examCountdown) {
-    clockTime.innerHTML = timeStr; // Use innerHTML for <small> tag
+    clockTime.textContent = timeStr;
     clockDate.textContent = dateStr;
 
     // Exam Countdown
@@ -3176,11 +3175,11 @@ function updateClock() {
     let diff = examDate - now;
 
     if (diff < 0) {
-      examCountdown.textContent = 'Exam has started!';
+      examCountdown.textContent = 'পরীক্ষা শুরু হয়েছে!';
     } else {
       const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
       const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
-      examCountdown.textContent = `বোর্ড পরিক্ষা শুরু হবে: ${months} মাস ${days} দিন পর*`;
+      examCountdown.textContent = `বোর্ড পরীক্ষা শুরু: ${months} মাস ${days} দিন পর*`;
     }
   }
     }

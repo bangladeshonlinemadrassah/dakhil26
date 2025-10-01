@@ -1679,14 +1679,19 @@ body::-webkit-scrollbar{display:none;}
     }
 
     .clock-time {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 5px;
-    }
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 5px;
+}
+
+.clock-time small {
+  font-size: 0.7em; /* PM/AM এর সাইজ 70% হবে, আপনি 0.5em-0.9em চেঞ্জ করতে পারেন */
+  vertical-align: middle; /* সারিবদ্ধ করা */
+                  }
 
     .clock-date {
       font-size: 0.9rem;

@@ -1679,19 +1679,14 @@ body::-webkit-scrollbar{display:none;}
     }
 
     .clock-time {
-  font-size: 1.8rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 5px;
-}
-
-.clock-time small {
-  font-size: 0.7em; /* PM/AM এর সাইজ 70% হবে, আপনি 0.5em-0.9em চেঞ্জ করতে পারেন */
-  vertical-align: middle; /* সারিবদ্ধ করা */
-                  }
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 5px;
+    }
 
     .clock-date {
       font-size: 0.9rem;
@@ -3156,7 +3151,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function updateClock() {
   const now = new Date();
-  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', <small> hour12: true</small> };
+  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
   const timeStr = now.toLocaleTimeString('bn-BD', timeOptions); // Bengali digits for time

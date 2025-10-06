@@ -1868,7 +1868,7 @@ body::-webkit-scrollbar{display:none;}
 </head>
 <body>
   <!-- Loading Overlay - New Addition -->
-  <div id="loading-overlay">
+  <div id="loading-overlay" class="hidden">
     <div class="loading-box">
       <div class="loading-spinner"></div>
       <h2 class="loading-title bangla-font">ডাটা লোড হচ্ছে<span class="loading-dots"></span></h2>
@@ -1923,7 +1923,7 @@ body::-webkit-scrollbar{display:none;}
       </nav>
     </header>
     <div class="notice-bar bangla-font"><span><b>👉 জিন্স সাজেশন 'ক্লাসের লেকচার শীট' ফোল্ডারে আপলোড করা হয়েছে।</b></span></div>
-    <div class="notice-bar bangla-font"><span><b>📢 বার্তা: প্রিয় শিক্ষার্থীরা, কমেন্টের রিপ্লাই সুবিধাটি সাময়িকভাবে স্থগিত আছে। তবে আপনাদের প্রতিটি মতামত আমরা যত্নসহকারে পড়ছি এবং প্রয়োজনীয় পদক্ষেপ নিচ্ছি। আপনাদের মূল্যবান মতামত জানাতে থাকুন — আন্তরিক ধন্যবাদ সাথে থাকার জন্য!</b></span></div>
+    <div class="notice-bar bangla-font"><span><b>📢 বার্তা: প্রিয় শিক্ষার্থীরা, কমেন্টের রিপ্লাই সুবিধাটি বর্তমানে স্থগিত আছে। তবে আপনাদের প্রতিটি মতামত আমরা যত্নসহকারে পড়ছি এবং প্রয়োজনীয় পদক্ষেপ নিচ্ছি। আপনাদের মূল্যবান মতামত জানাতে থাকুন — আন্তরিক ধন্যবাদ সাথে থাকার জন্য!</b></span></div>
     <main class="container">
       <div class="hero fade-in">
         <h1 class="bangla-font">Dakhil-26 "Final Stage Preparation Course"</h1>
@@ -2240,44 +2240,28 @@ function closeWarningModal() {
 
 // New loading overlay functions
 function showLoadingOverlay() {
-  if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+  loadingOverlay.classList.remove('hidden');
 }
 
 function hideLoadingOverlay() {
-  if (loadingOverlay) loadingOverlay.classList.add('hidden');
+  loadingOverlay.classList.add('hidden');
 }
 
 function updateLoadingProgress(progress) {
-  const progressBar = document.getElementById('loading-progress-bar');
+  const progressBar = $('#loading-progress-bar');
   if (progressBar) {
     progressBar.style.width = `${progress}%`;
   }
 }
 
 function showLoadingModal() {
-  if (loadingModal) loadingModal.style.display = 'flex';
+  loadingModal.style.display = 'flex';
 }
 
 function hideLoadingModal() {
-  if (loadingModal) loadingModal.style.display = 'none';
+  loadingModal.style.display = 'none';
 }
 
-// ✅ শুধুমাত্র যখন ডেটা লোড শুরু হবে তখন Modal দেখাবে
-function startDataLoading() {
-  showLoadingModal();
-  showLoadingOverlay();
-  updateLoadingProgress(10);
-
-  fetchData().then(() => {
-    updateLoadingProgress(100);
-    setTimeout(() => {
-      hideLoadingModal();
-      hideLoadingOverlay();
-      updateLoadingProgress(0);
-    }, 200); // ০.২ সেকেন্ডে লুকিয়ে যাবে
-  });
-    }
-    
 function showNotification(message, isError = false, isWarning = false) {
   const notification = $('#notification');
   notification.innerHTML = "<i class=\"" + (isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle') + "\"></i> " + message;

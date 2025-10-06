@@ -2240,28 +2240,44 @@ function closeWarningModal() {
 
 // New loading overlay functions
 function showLoadingOverlay() {
-  loadingOverlay.classList.remove('hidden');
+  if (loadingOverlay) loadingOverlay.classList.remove('hidden');
 }
 
 function hideLoadingOverlay() {
-  loadingOverlay.classList.add('hidden');
+  if (loadingOverlay) loadingOverlay.classList.add('hidden');
 }
 
 function updateLoadingProgress(progress) {
-  const progressBar = $('#loading-progress-bar');
+  const progressBar = document.getElementById('loading-progress-bar');
   if (progressBar) {
     progressBar.style.width = `${progress}%`;
   }
 }
 
 function showLoadingModal() {
-  loadingModal.style.display = 'flex';
+  if (loadingModal) loadingModal.style.display = 'flex';
 }
 
 function hideLoadingModal() {
-  loadingModal.style.display = 'none';
+  if (loadingModal) loadingModal.style.display = 'none';
 }
 
+// ✅ শুধুমাত্র যখন ডেটা লোড শুরু হবে তখন Modal দেখাবে
+function startDataLoading() {
+  showLoadingModal();
+  showLoadingOverlay();
+  updateLoadingProgress(10);
+
+  fetchData().then(() => {
+    updateLoadingProgress(100);
+    setTimeout(() => {
+      hideLoadingModal();
+      hideLoadingOverlay();
+      updateLoadingProgress(0);
+    }, 200); // ০.২ সেকেন্ডে লুকিয়ে যাবে
+  });
+    }
+    
 function showNotification(message, isError = false, isWarning = false) {
   const notification = $('#notification');
   notification.innerHTML = "<i class=\"" + (isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle') + "\"></i> " + message;

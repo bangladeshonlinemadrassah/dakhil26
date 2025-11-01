@@ -1,134 +1,852 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BOM - নতুন ঘোষণা</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOM - নতুন অ্যাপ ভার্সন ২.০</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --secondary: #14b8a6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f1f5f9;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+            --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+            --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
 
-  <style>
-    :root {
-      --primary: #f43f5e;
-      --secondary: #ec4899;
-      --gradient: linear-gradient(135deg, #f43f5e, #ec4899);
-      --dark-bg: #0f172a;
-      --card-bg: rgba(255, 255, 255, 0.08);
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --radius: 16px;
-      --transition: all 0.3s ease;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            background: var(--darker);
+            color: var(--text);
+            font-family: 'Poppins', 'Tiro Bangla', system-ui, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
 
-    body {
-      font-family: 'Tiro Bangla', 'Poppins', sans-serif;
-      background: var(--dark-bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px;
-      background-image: radial-gradient(circle at top right, rgba(236, 72, 153, 0.15), transparent 50%);
-    }
+        body::-webkit-scrollbar {
+            display: none;
+        }
 
-    .announcement {
-      background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 40px 30px;
-      border-radius: var(--radius);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      max-width: 750px;
-      width: 100%;
-    }
+        .bangla-font {
+            font-family: 'Tiro Bangla', 'Poppins', serif;
+        }
 
-    h1 {
-      font-size: 2.6rem;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      color: transparent;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-    h2 {
-      color: var(--secondary);
-      font-size: 1.4rem;
-      margin-bottom: 25px;
-    }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
 
-    p {
-      font-size: 1.1rem;
-      color: var(--text);
-      line-height: 1.8;
-      margin-bottom: 18px;
-    }
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
 
-    .highlight {
-      color: #fbbf24;
-      font-weight: 600;
-    }
+        .logo {
+            font-size: 4rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 5px 15px rgba(13, 148, 136, 0.3);
+        }
 
-    .whatsapp-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--gradient);
-      color: white;
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 14px 30px;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: var(--transition);
-      box-shadow: 0 8px 20px rgba(244, 63, 94, 0.4);
-    }
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
 
-    .whatsapp-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(244, 63, 94, 0.6);
-    }
+        .logo-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--gradient-secondary);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: var(--shadow-md);
+            animation: pulse 2s infinite;
+        }
 
-    .whatsapp-btn i {
-      font-size: 1.3rem;
-    }
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 10px;
+        }
 
-    .footer {
-      margin-top: 35px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-  </style>
+        .announcement-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            backdrop-filter: blur(15px);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            margin-bottom: 40px;
+        }
+
+        .announcement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-primary);
+            z-index: 1;
+        }
+
+        .announcement-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulse 8s infinite alternate;
+        }
+
+        .greeting {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: var(--secondary);
+            font-weight: 700;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .greeting-emoji {
+            font-size: 2.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        .message {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 30px;
+        }
+
+        .paragraph {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .paragraph:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .paragraph-1 {
+            border-left-color: var(--primary);
+            background: rgba(13, 148, 136, 0.1);
+        }
+
+        .paragraph-2 {
+            border-left-color: var(--accent);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .paragraph-3 {
+            border-left-color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .paragraph-4 {
+            border-left-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .paragraph-5 {
+            border-left-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .paragraph-emoji {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 1.8rem;
+            opacity: 0.7;
+        }
+
+        .highlight {
+            color: var(--warning);
+            font-weight: 600;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+            margin: 20px 0;
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .highlight::before {
+            content: '🚀';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+
+        .download-instructions {
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .instructions-title {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions-title i {
+            font-size: 1.5rem;
+        }
+
+        .instructions-list {
+            padding-left: 20px;
+        }
+
+        .instructions-list li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .instructions-list li::marker {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .feature-list {
+            margin: 25px 0;
+            padding-left: 20px;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .feature-list li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .signature div:first-child {
+            margin-bottom: 5px;
+        }
+
+        .signature div:last-child {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 32px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            min-width: 250px;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .download-btn {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4);
+        }
+
+        .whatsapp-btn {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 10px 25px rgba(13, 148, 136, 0.6);
+        }
+
+        .whatsapp-btn:hover {
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.6);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Background Animation Effects */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            opacity: 0.1;
+            filter: blur(40px);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            background: var(--gradient-secondary);
+        }
+
+        .shape:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            top: 30%;
+            left: 70%;
+            animation-delay: 6s;
+        }
+
+        .shape:nth-child(4) {
+            width: 180px;
+            height: 180px;
+            top: 70%;
+            left: 10%;
+            animation-delay: 9s;
+            background: var(--gradient-secondary);
+        }
+
+        .shape:nth-child(5) {
+            width: 220px;
+            height: 220px;
+            top: 20%;
+            left: 50%;
+            animation-delay: 12s;
+        }
+
+        .pulse-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: pulse-dot 3s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) {
+            top: 20%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .dot:nth-child(2) {
+            top: 50%;
+            left: 85%;
+            animation-delay: 0.5s;
+        }
+
+        .dot:nth-child(3) {
+            top: 80%;
+            left: 25%;
+            animation-delay: 1s;
+        }
+
+        .dot:nth-child(4) {
+            top: 40%;
+            left: 65%;
+            animation-delay: 1.5s;
+        }
+
+        .dot:nth-child(5) {
+            top: 65%;
+            left: 45%;
+            animation-delay: 2s;
+        }
+
+        .dot:nth-child(6) {
+            top: 30%;
+            left: 35%;
+            animation-delay: 2.5s;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(10px) translateX(-15px);
+            }
+            75% {
+                transform: translateY(-15px) translateX(-5px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .logo-badge {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .announcement-card {
+                padding: 25px;
+            }
+            
+            .greeting {
+                font-size: 1.7rem;
+            }
+            
+            .greeting-emoji {
+                font-size: 2rem;
+            }
+            
+            .message {
+                font-size: 1.05rem;
+            }
+            
+            .paragraph {
+                padding: 15px;
+            }
+            
+            .action-btn {
+                padding: 16px 28px;
+                font-size: 1rem;
+                min-width: 220px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .logo-badge {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                top: -10px;
+                right: -10px;
+            }
+            
+            .announcement-card {
+                padding: 20px;
+            }
+            
+            .greeting {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .greeting-emoji {
+                font-size: 1.8rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+            }
+            
+            .paragraph {
+                padding: 12px;
+            }
+            
+            .action-btn {
+                padding: 14px 24px;
+                font-size: 0.95rem;
+                min-width: 200px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <div class="announcement">
-    <h1>BOM</h1>
-    <h2>বাংলাদেশ অনলাইন মাদ্রাসা</h2>
-
-    <p>📢 <strong>গুরুত্বপূর্ণ ঘোষণা:</strong></p>
-
-    <p>প্রতিষ্ঠানের কার্যক্রম <span class="highlight">শীঘ্রই শুরু হবে</span>। তবে এই অ্যাপে নয়।</p>
-
-    <p>কিছু কারিগরি ত্রুটির কারণে এই অ্যাপটি আর <span class="highlight">আপডেট করা হবে না</span> এবং খুব শীঘ্রই বন্ধ হয়ে যাবে।</p>
-
-    <p>নতুন <strong>Version 2 App</strong> ইতিমধ্যে প্রকাশিত হয়েছে। সকলকে BOM-এর Admin এর কাছ থেকে নতুন অ্যাপ সংগ্রহ করতে অনুরোধ করা হচ্ছে।</p>
-
-    <div style="margin-top: 30px;">
-      <a href="https://wa.me/8801806234120" target="_blank" class="whatsapp-btn">
-        <i class="fab fa-whatsapp"></i> Admin এর সাথে যোগাযোগ করুন
-      </a>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="pulse-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
     </div>
 
-    <div class="footer">
-      © 2025 BANGLADESH ONLINE MADRASAH (BOM) — All Rights Reserved
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <h1 class="logo bangla-font">BOM</h1>
+                <div class="logo-badge">Version 2 published</div>
+            </div>
+            <p class="subtitle bangla-font">BANGLADESH ONLINE MADRASAH</p>
+        </div>
+
+        <div class="announcement-card">
+            <h2 class="greeting bangla-font">
+                <span class="greeting-emoji">🕌</span>
+                আসসালামু আলাইকুম ওয়া রহমাতুল্লাহ
+                </h2>
+            
+            <div class="message bangla-font">
+                <div class="paragraph paragraph-1">
+                    <span class="paragraph-emoji">👋</span>
+                    বাংলাদেশ অনলাইন মাদ্রাসা (BOM)-এর সকল শিক্ষার্থী, অভিভাবক ও সুহৃদয় ব্যক্তিবর্গের প্রতি আমাদের আন্তরিক অভিবাদন।
+                </div>
+                
+                <div class="paragraph paragraph-2">
+                    <span class="paragraph-emoji">📢</span>
+                    আমরা আনন্দের সাথে ঘোষণা করছি যে, BOM-এর কার্যক্রম শীঘ্রই পুনরায় শুরু হবে। তবে, কিছু কারিগরি ত্রুটির কারণে বর্তমান অ্যাপটি আর আপডেট করা হবে না এবং শীঘ্রই এটি বন্ধ হয়ে যাবে।
+                </div>
+                
+                <div class="paragraph paragraph-3">
+                    <span class="paragraph-emoji">✨</span>
+                    আমরা নতুন একটি অ্যাপ্লিকেশন (DAKHIL-26 BOM V2.apk) প্রকাশ করেছি, যা এখনই ডাউনলোড করতে পারবেন। সকল শিক্ষার্থী ও ব্যবহারকারীদের অনুরোধ করা হচ্ছে নতুন ভার্সনটি ব্যবহার করার জন্য।
+                </div>
+                
+                <div class="download-instructions">
+                    <h3 class="instructions-title bangla-font">
+                        <i class="fas fa-download"></i>
+                        অ্যাপ ডাউনলোডের নিয়ম:
+                    </h3>
+                    <ol class="instructions-list bangla-font">
+                        <li>"অ্যাপ ডাউনলোড করুন" বোতামে ক্লিক করুন। এটি আপনাকে একটি লিঙ্কে নিয়ে যাবে যেখানে APK ফাইলটি ডাউনলোড করতে পারবেন।</li>
+                        <li>এই পেজে "Download anyway" বোতামে ক্লিক করে ফাইলটি ডাউনলোড করুন।</li>
+                        <li>ডাউনলোড শেষে ফাইলটি আপনার ডিভাইসে ইনস্টল করুন।</li>
+                        <li>যদি প্রথমে ইনস্টল না হয়, দয়া করে কয়েকবার ট্রাই করুন।</li>
+                    </ol>
+                </div>
+                
+                <div class="paragraph paragraph-4">
+                    <span class="paragraph-emoji">📞</span>
+                    ডাউনলোড করতে না পারলে বা কোনো প্রকার অসুবিধা হলে, অনুগ্রহ করে আমাদের অ্যাডমিনের সাথে যোগাযোগ করে app নিয়ে নিন।
+                </div>
+                
+                <div class="paragraph paragraph-5">
+                    <span class="paragraph-emoji">🙏</span>
+                    আপনাদের ধৈর্য, সহযোগিতা ও দোয়ার জন্য আমরা কৃতজ্ঞ।
+                </div>
+            </div>
+            
+            <div class="signature bangla-font">
+                <div>ভারপ্রাপ্ত প্রশাসন</div>
+                <div>বাংলাদেশ অনলাইন মাদ্রাসা (BOM)</div>
+            </div>
+            
+            <div class="button-container">
+                <a href="https://drive.google.com/file/d/19HtCmSRbT9q8Yd4D7wnDf7W6OmcqLFpG/view?usp=drivesdk" class="action-btn download-btn">
+                    <i class="fas fa-download"></i>
+                    নতুন অ্যাপ ডাউনলোড করুন
+                </a>
+                <a href="https://wa.me/8801806234120" class="action-btn whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i>
+                    অ্যাডমিনের সাথে যোগাযোগ
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p class="bangla-font">© ২০২৫ বাংলাদেশ অনলাইন মাদ্রাসা (BOM) - সকল অধিকার সংরক্ষিত</p>
+        </div>
     </div>
-  </div>
+
+    <script>
+        // Additional animation effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add typing effect to the greeting
+            const greeting = document.querySelector('.greeting');
+            const originalText = greeting.textContent;
+            greeting.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    greeting.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            setTimeout(typeWriter, 1000);
+            
+            // Add floating animation to the card
+            const card = document.querySelector('.announcement-card');
+            let floating = true;
+            
+            const floatCard = () => {
+                if (floating) {
+                    card.style.transform = 'translateY(-5px)';
+                    setTimeout(() => {
+                        card.style.transform = 'translateY(5px)';
+                        setTimeout(floatCard, 90000000);
+                    }, 2000);
+                }
+            };
+            
+            floatCard();
+            
+            // Add glow effect to buttons on hover
+            const buttons = document.querySelectorAll('.action-btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    if (this.classList.contains('download-btn')) {
+                        this.style.boxShadow = '0 0 20px 5px rgba(13, 148, 136, 0.7)';
+                    } else if (this.classList.contains('whatsapp-btn')) {
+                        this.style.boxShadow = '0 0 20px 5px rgba(16, 185, 129, 0.7)';
+                    }
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    if (this.classList.contains('download-btn')) {
+                        this.style.boxShadow = '0 6px 20px rgba(13, 148, 136, 0.4)';
+                    } else if (this.classList.contains('whatsapp-btn')) {
+                        this.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
+                    }
+                });
+            });
+            
+            // Add animation to paragraphs on scroll
+            const paragraphs = document.querySelectorAll('.paragraph');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateX(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            paragraphs.forEach(paragraph => {
+                paragraph.style.opacity = '0';
+                paragraph.style.transform = 'translateX(-20px)';
+                paragraph.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(paragraph);
+            });
+        });
+    </script>
 </body>
 </html>
